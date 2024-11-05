@@ -1,0 +1,6 @@
+@ElderlyCareSupport.Server_HostAddress = http://localhost:5109
+
+GET {{ElderlyCareSupport.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
