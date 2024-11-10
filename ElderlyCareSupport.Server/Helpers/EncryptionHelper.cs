@@ -1,5 +1,4 @@
-﻿using ElderlyCareSupport.Server.DataRepository;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System.Security.Cryptography;
 
 namespace ElderlyCareSupport.Server.Helpers

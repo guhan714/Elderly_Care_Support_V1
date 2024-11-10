@@ -1,8 +1,8 @@
 ﻿using ElderlyCareSupport.Server.Models;
 
-namespace ElderlyCareSupport.Server.HelperInterface
+namespace ElderlyCareSupport.Server.Services.Interfaces
 {
-    public interface IFeeRepository
+    public interface IFeeService
     {
         Task<List<FeeConfiguration>> GetAllFeeDetails();
     }

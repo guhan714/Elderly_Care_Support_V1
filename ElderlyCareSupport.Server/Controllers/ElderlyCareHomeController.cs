@@ -1,7 +1,6 @@
 ﻿using ElderlyCareSupport.Server.Common;
-using ElderlyCareSupport.Server.DataRepository;
-using ElderlyCareSupport.Server.HelperInterface;
-using ElderlyCareSupport.Server.Interfaces;
+using ElderlyCareSupport.Server.Repositories.Interfaces;
+using ElderlyCareSupport.Server.Services.Interfaces;
 using ElderlyCareSupport.Server.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,23 +13,23 @@ namespace ElderlyCareSupport.Server.Controllers
     [Produces("application/json")]
     public class ElderlyCareHomeController : ControllerBase
     {
-        private readonly IFeeRepository repository;
+        private readonly IFeeService feeService;
         private readonly ILogger<ElderlyCareHomeController> logger;
-        private readonly ILoginRepository loginRepository;
-        private readonly IRegistrationRepository registrationRepository;
-        public ElderlyCareHomeController(IFeeRepository feeRepository, ILogger<ElderlyCareHomeController> logger, ILoginRepository loginRepository, IRegistrationRepository registrationRepository)
+        private readonly ILoginService loginService;
+        private readonly IRegistrationService registrationService;
+        public ElderlyCareHomeController(IFeeService feeService, ILogger<ElderlyCareHomeController> logger, ILoginService loginService, IRegistrationService registrationService)
         {
-            this.repository = feeRepository;
+            this.feeService = feeService;
             this.logger = logger;
-            this.loginRepository = loginRepository;
-            this.registrationRepository = registrationRepository;
+            this.loginService = loginService;
+            this.registrationService = registrationService;
         }
 
         [AllowAnonymous]
         [HttpGet("GetFeeDetails")]
         public ActionResult GetFeeDetails()
         {
-            var feeDetails = repository.GetAllFeeDetails();
+            var feeDetails = feeService.GetAllFeeDetails();
             if (feeDetails.Result.Count >= 1)
             {
                 logger.LogInformation($"Data Successfully fetched from the server...\nClass: {nameof(ElderlyCareHomeController)} Method: {nameof(GetFeeDetails)}");
@@ -50,7 +49,7 @@ namespace ElderlyCareSupport.Server.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = loginRepository.AuthenticateLogin(loginViewModel);
+                var result = loginService.AuthenticateLogin(loginViewModel);
                 if (result.Result)
                 {
                     return Ok(APIResponseFactory.CreateResponse(data: result.Result.ToString(), success: true, statusMessage: "Ok"));
@@ -70,16 +69,9 @@ namespace ElderlyCareSupport.Server.Controllers
 
             if (ModelState.IsValid)
             {
-                var registrationStatus = registrationRepository.RegisterUser(registerViewModel);
+                var registrationStatus = registrationService.RegisterUser(registerViewModel);
                 if (registrationStatus.Result)
                 {
-                    var registrationResponse = new APIResponseModel<object>
-                    {
-                        StatusCode = 200,
-                        StatusMessage = "OK",
-                        Data = registrationStatus.Result,
-                        Success = true
-                    };
                     return Ok(APIResponseFactory.CreateResponse(data: registrationStatus.Result.ToString(), success: true, statusMessage: "Ok"));
                 }
                 else
