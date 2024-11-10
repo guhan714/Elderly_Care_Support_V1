@@ -1,11 +1,17 @@
 using ElderlyCareSupport.Server.DataRepository;
 using ElderlyCareSupport.Server.HelperInterface;
+using ElderlyCareSupport.Server.Helpers;
 using ElderlyCareSupport.Server.Interfaces;
 using ElderlyCareSupport.Server.Models;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseSerilog((context, configuration) =>
+{
+    configuration.ReadFrom.Configuration(context.Configuration);
+});
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -15,10 +21,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ElderlyCareSupportContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("ElderDB")));
 
-builder.Services.AddLogging();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IFeeRepository, FeeRepository>();   
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();   
+builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();   
 
 var app = builder.Build();
 
@@ -29,6 +35,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
