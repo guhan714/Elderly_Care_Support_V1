@@ -1,8 +1,8 @@
 ﻿using ElderlyCareSupport.Server.ViewModels;
 
-namespace ElderlyCareSupport.Server.Interfaces
+namespace ElderlyCareSupport.Server.Services.Interfaces
 {
-    public interface ILoginRepository
+    public interface ILoginService
     {
         Task<bool> AuthenticateLogin(LoginViewModel loginViewModel);
     }

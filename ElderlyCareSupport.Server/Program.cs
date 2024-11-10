@@ -1,8 +1,8 @@
-using ElderlyCareSupport.Server.DataRepository;
-using ElderlyCareSupport.Server.HelperInterface;
-using ElderlyCareSupport.Server.Helpers;
-using ElderlyCareSupport.Server.Interfaces;
 using ElderlyCareSupport.Server.Models;
+using ElderlyCareSupport.Server.Repositories.Implementations;
+using ElderlyCareSupport.Server.Repositories.Interfaces;
+using ElderlyCareSupport.Server.Services.Implementations;
+using ElderlyCareSupport.Server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -22,6 +22,14 @@ builder.Services.AddDbContext<ElderlyCareSupportContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("ElderDB")));
 
 builder.Services.AddMemoryCache();
+
+
+// 
+builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IRegistrationService, RegistrationService>();
+builder.Services.AddScoped<IFeeService, FeeService>();
+
+//
 builder.Services.AddScoped<IFeeRepository, FeeRepository>();   
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();   
 builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();   

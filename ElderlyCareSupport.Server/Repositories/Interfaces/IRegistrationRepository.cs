@@ -1,6 +1,6 @@
 ﻿using ElderlyCareSupport.Server.ViewModels;
 
-namespace ElderlyCareSupport.Server.Interfaces
+namespace ElderlyCareSupport.Server.Repositories.Interfaces
 {
     public interface IRegistrationRepository
     {
