@@ -15,11 +15,31 @@ public partial class ElderlyCareSupportContext : DbContext
     {
     }
 
+    public virtual DbSet<ElderCareAccount> ElderCareAccounts { get; set; }
+
     public virtual DbSet<FeeConfiguration> FeeConfigurations { get; set; }
 
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ElderCareAccount>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__ElderCar__3214EC07457AF218");
+
+            entity.ToTable("ElderCareAccount");
+
+            entity.Property(e => e.Address).HasMaxLength(200);
+            entity.Property(e => e.City).HasMaxLength(200);
+            entity.Property(e => e.ConfirmPassword).HasMaxLength(200);
+            entity.Property(e => e.Country).HasMaxLength(100);
+            entity.Property(e => e.Email).HasMaxLength(200);
+            entity.Property(e => e.FirstName).HasMaxLength(200);
+            entity.Property(e => e.Gender).HasMaxLength(200);
+            entity.Property(e => e.LastName).HasMaxLength(200);
+            entity.Property(e => e.Password).HasMaxLength(200);
+            entity.Property(e => e.Region).HasMaxLength(200);
+        });
+
         modelBuilder.Entity<FeeConfiguration>(entity =>
         {
             entity.HasKey(e => e.FeeId).HasName("PK__FEE_CONF__EC233B49F893270E");
