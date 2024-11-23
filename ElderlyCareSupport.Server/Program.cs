@@ -28,11 +28,12 @@ builder.Services.AddMemoryCache();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IRegistrationService, RegistrationService>();
 builder.Services.AddScoped<IFeeService, FeeService>();
-
+builder.Services.AddScoped<IForgotPaswordService, ForgotPasswordService>();
 //
 builder.Services.AddScoped<IFeeRepository, FeeRepository>();   
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();   
 builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();   
+builder.Services.AddScoped<IForgotPasswordRepository, ForgotPasswordRepository>();   
 
 var app = builder.Build();
 
@@ -47,7 +48,6 @@ app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-app.UseCors("AllowAllOrigins");
 app.MapControllers();
 app.MapControllerRoute(
     name: "default",

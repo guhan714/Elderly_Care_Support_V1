@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace ElderlyCareSupport.Server.Helpers
 {
-    public class EncryptionHelper
+    public class CryptographyHelper
     {
         public static byte[] EncryptPassword(string plainText, byte[] Key, byte[] IV)
         {
@@ -24,23 +24,18 @@ namespace ElderlyCareSupport.Server.Helpers
             return encrypted;
         }
 
-        public string PasswordDecrypt(byte[] cipherText, byte[] Key, byte[] IV)
+        public string DecryptPassword(byte[] cipherText, byte[] Key, byte[] IV)
         {
             string plaintext = String.Empty;
-
             try
             {
-                using (AesManaged aes = new AesManaged())
+                using (AesManaged aes = new())
                 {
-                    // Create a decryptor
                     ICryptoTransform decryptor = aes.CreateDecryptor(Key, IV);
-                    // Create the streams used for decryption.
                     using (MemoryStream ms = new MemoryStream(cipherText))
                     {
-                        // Create crypto stream
                         using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
                         {
-                            // Read crypto stream
                             using (StreamReader reader = new StreamReader(cs))
                                 plaintext = reader.ReadToEnd();
                         }
