@@ -19,8 +19,7 @@ namespace ElderlyCareSupport.Server.Services.Implementations
             try
             {
                 logger.LogInformation("Started Login Authentication from {ClassName}\nAt Method: {MethodName}", nameof(LoginService), nameof(AuthenticateLogin));
-                var login = await loginRepository.AuthenticateLogin(loginViewModel);
-                return login;
+                return await loginRepository.AuthenticateLogin(loginViewModel);
             }
             catch (Exception ex)
             {

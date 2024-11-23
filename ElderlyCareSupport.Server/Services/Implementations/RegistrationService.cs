@@ -14,7 +14,7 @@ namespace ElderlyCareSupport.Server.Services.Implementations
             this.logger = logger;
         }
 
-        public async Task<bool> RegisterUser(RegistrationViewModel registrationViewModel)
+        public async Task<bool> RegisterUserAsync(RegistrationViewModel registrationViewModel)
         {
             try
             {
@@ -22,18 +22,18 @@ namespace ElderlyCareSupport.Server.Services.Implementations
 
                 if (result)
                 {
-                    logger.LogInformation("Started Registering User Details from {ClassName}\nAt Method: {MethodName}", nameof(RegistrationService), nameof(RegisterUser));
+                    logger.LogInformation("Started Registering User Details from {ClassName}\nAt Method: {MethodName}", nameof(RegistrationService), nameof(RegisterUserAsync));
                     return result;
                 }
                 else
                 {
-                    logger.LogWarning("Can't Register User Details from {ClassName}\nAt Method: {MethodName}", nameof(RegistrationService), nameof(RegisterUser));
+                    logger.LogWarning("Can't Register User Details from {ClassName}\nAt Method: {MethodName}", nameof(RegistrationService), nameof(RegisterUserAsync));
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                logger.LogError("Error Registering User Details from {ClassName}\nAt Method: {MethodName}", nameof(RegistrationService), nameof(RegisterUser));
+                logger.LogError("Error Registering User Details from {ClassName}\nAt Method: {MethodName}\nException: {Exception}", nameof(RegistrationService), nameof(RegisterUserAsync), ex.Message);
                 return false;
             }
         }

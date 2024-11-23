@@ -4,6 +4,6 @@ namespace ElderlyCareSupport.Server.Services.Interfaces
 {
     public interface IRegistrationService
     {
-        Task<bool> RegisterUser(RegistrationViewModel registrationViewModel);
+        Task<bool> RegisterUserAsync(RegistrationViewModel registrationViewModel);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ElderlyCareSupport.Server.Models;
 using ElderlyCareSupport.Server.Repositories.Interfaces;
 using ElderlyCareSupport.Server.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using System.Security.Cryptography;
 using System.Web.Http.ModelBinding;
@@ -21,7 +22,7 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
 
         public async Task<bool> AuthenticateLogin(LoginViewModel loginViewModel)
         {
-            var authenticatedUser = context.ElderCareAccounts.Where(t => t.Email == loginViewModel.UserName && t.Password == loginViewModel.Password).FirstOrDefault();
+            var authenticatedUser = await context.ElderCareAccounts.FirstOrDefaultAsync(t => t.Email == loginViewModel.Email && t.Password == loginViewModel.Password);
             try
             {
                 if (authenticatedUser != null)

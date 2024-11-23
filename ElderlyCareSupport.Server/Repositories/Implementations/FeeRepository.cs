@@ -20,7 +20,7 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
             try
             {
                 logger.LogInformation("Data Fetching Started:  class: {ClassName} Method: {MethodName}", nameof(ElderlyCareHomeController), nameof(GetAllFeeDetails));
-                return context.FeeConfigurations.ToList();
+                return await context.FeeConfigurations.ToListAsync();
             }
             catch (Exception ex)
             {
