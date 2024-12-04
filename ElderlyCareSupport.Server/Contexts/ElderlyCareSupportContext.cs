@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using ElderlyCareSupport.Server.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ElderlyCareSupport.Server.Models;
+namespace ElderlyCareSupport.Server.Contexts;
 
 public partial class ElderlyCareSupportContext : DbContext
 {
@@ -19,22 +20,25 @@ public partial class ElderlyCareSupportContext : DbContext
 
     public virtual DbSet<FeeConfiguration> FeeConfigurations { get; set; }
 
+    public virtual DbSet<VolunteerAccount> VolunteerAccounts { get; set; }
 
+   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ElderCareAccount>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ElderCar__3214EC07457AF218");
+            entity.HasKey(e => e.Email).HasName("PK__ElderCar__3214EC07457AF218");
 
             entity.ToTable("ElderCareAccount");
 
+            entity.Property(e => e.Email).HasMaxLength(200);
             entity.Property(e => e.Address).HasMaxLength(200);
             entity.Property(e => e.City).HasMaxLength(200);
             entity.Property(e => e.ConfirmPassword).HasMaxLength(200);
             entity.Property(e => e.Country).HasMaxLength(100);
-            entity.Property(e => e.Email).HasMaxLength(200);
             entity.Property(e => e.FirstName).HasMaxLength(200);
             entity.Property(e => e.Gender).HasMaxLength(200);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.LastName).HasMaxLength(200);
             entity.Property(e => e.Password).HasMaxLength(200);
             entity.Property(e => e.Region).HasMaxLength(200);
@@ -57,6 +61,25 @@ public partial class ElderlyCareSupportContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("FEE_NAME");
+        });
+
+        modelBuilder.Entity<VolunteerAccount>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("VolunteerAccount");
+
+            entity.Property(e => e.Address).HasMaxLength(200);
+            entity.Property(e => e.City).HasMaxLength(200);
+            entity.Property(e => e.ConfirmPassword).HasMaxLength(200);
+            entity.Property(e => e.Country).HasMaxLength(100);
+            entity.Property(e => e.Email).HasMaxLength(200);
+            entity.Property(e => e.FirstName).HasMaxLength(200);
+            entity.Property(e => e.Gender).HasMaxLength(200);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.LastName).HasMaxLength(200);
+            entity.Property(e => e.Password).HasMaxLength(200);
+            entity.Property(e => e.Region).HasMaxLength(200);
         });
 
         OnModelCreatingPartial(modelBuilder);

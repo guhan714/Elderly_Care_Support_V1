@@ -1,29 +1,24 @@
-﻿using ElderlyCareSupport.Server.Models;
+﻿using ElderlyCareSupport.Server.Contexts;
+using ElderlyCareSupport.Server.Models;
 using ElderlyCareSupport.Server.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ElderlyCareSupport.Server.Repositories.Implementations
 {
-    public class ForgotPasswordRepository: IForgotPasswordRepository
+    public class ForgotPasswordRepository(ElderlyCareSupportContext elderlyCareSupportContext, ILogger<ForgotPasswordRepository> logger) : IForgotPasswordRepository
     {
-        private readonly ElderlyCareSupportContext elderlyCareSupportContext;
-        private readonly ILogger<ForgotPasswordRepository> logger;
-        public ForgotPasswordRepository(ElderlyCareSupportContext elderlyCareSupportContext, ILogger<ForgotPasswordRepository> logger)
-        {
-            this.elderlyCareSupportContext = elderlyCareSupportContext;
-            this.logger = logger;
-        }
         public async Task<string> GetPasswordAsync(string userName)
         {
             try
             {
-                var password = await elderlyCareSupportContext.ElderCareAccounts.FirstOrDefaultAsync(user => user.Email == userName);
-                return password is null ? String.Empty : password.Password;
+                string? password = await elderlyCareSupportContext.ElderCareAccounts.Where(e => e.Email == userName).Select(password => password.Password).FirstOrDefaultAsync();
+                return await Task.FromResult(password ?? String.Empty);
             }
             catch (Exception ex)
             {
-                logger.LogError("Error Occured during the password retrieval process...At Class {ClassName} Method: {MethodName} ErrorMessage: {Error}", nameof(ForgotPasswordRepository), nameof(GetPasswordAsync), ex.Message);
-                return String.Empty;
+                logger.LogError("Error Occured during the password retrieval process...At Class {ClassName} Method: {MethodName} ErrorMessage: {Error}",
+                                nameof(ForgotPasswordRepository), nameof(GetPasswordAsync), ex.Message);
+                return await Task.FromResult(String.Empty);
             }
         }
     }

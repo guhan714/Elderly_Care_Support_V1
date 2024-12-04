@@ -1,19 +1,19 @@
-﻿namespace ElderlyCareSupport.Server.Common
-{
-    public class APIResponseFactory
-    {
+﻿
+using ElderlyCareSupport.Server.Services.Interfaces;
 
-        public static APIResponseModel<T> CreateResponse<T>(T? data, bool success, string statusMessage, string? errorMessage = null) where T : class 
+namespace ElderlyCareSupport.Server.Common
+{
+    public class APIResponseFactory : IAPIResponseFactoryService
+    {
+        public APIResponseModel<T> CreateResponse<T>(T? data, bool success, string statusMessage, string? errorMessage = null, IEnumerable<Error>? error = null) where T : class => new()
         {
-            return new APIResponseModel<T> 
-            { 
-                StatusCode = success ? 200 : 400,
-                Data = data, 
-                Success = success,
-                StatusMessage = success ? "Ok" : "Can't complete the request",
-                ErrorMessage = errorMessage,
-            };
-        }
+            StatusCode = success ? 200 : 400,
+            Data = data,
+            Success = success,
+            StatusMessage = success ? "Ok" : "Can't complete the request",
+            ErrorMessage = errorMessage,
+            Errors = error
+        };
 
     }
 }

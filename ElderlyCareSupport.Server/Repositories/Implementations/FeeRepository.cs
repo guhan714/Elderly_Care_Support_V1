@@ -1,31 +1,27 @@
-﻿using ElderlyCareSupport.Server.Controllers;
+﻿using AutoMapper;
+using ElderlyCareSupport.Server.Contexts;
+using ElderlyCareSupport.Server.Controllers;
+using ElderlyCareSupport.Server.DTOs;
 using ElderlyCareSupport.Server.Models;
 using ElderlyCareSupport.Server.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ElderlyCareSupport.Server.Repositories.Implementations
 {
-    public class FeeRepository : IFeeRepository
+    public class FeeRepository(ElderlyCareSupportContext context, ILogger<FeeRepository> logger, IMapper mapper) : IFeeRepository
     {
-        ElderlyCareSupportContext context;
-        ILogger<FeeRepository> logger;
-        public FeeRepository(ElderlyCareSupportContext context, ILogger<FeeRepository> logger)
-        {
-            this.context = context;
-            this.logger = logger;
-        }
-
-        public async Task<List<FeeConfiguration>> GetAllFeeDetails()
+        public async Task<IEnumerable<FeeConfigurationDTO>> GetAllFeeDetailsAsync()
         {
             try
             {
-                logger.LogInformation("Data Fetching Started:  class: {ClassName} Method: {MethodName}", nameof(ElderlyCareHomeController), nameof(GetAllFeeDetails));
-                return await context.FeeConfigurations.ToListAsync();
+                logger.LogInformation($"Data Fetching Started:  class: {nameof(FeeRepository)} Method: {GetAllFeeDetailsAsync}");
+                var result =  await context.FeeConfigurations.ToArrayAsync();
+                return mapper.Map<IEnumerable<FeeConfigurationDTO>>(result);
             }
             catch (Exception ex)
             {
-                logger.LogError("Exception occured:  class: {ClassName} Method: {MethodName}\nMessage: {ExceptionMessage}", nameof(ElderlyCareHomeController), nameof(GetAllFeeDetails), ex.Message);
-                return new List<FeeConfiguration>();
+                logger.LogError(message: $"Exception occured:  class: {nameof(FeeRepository)} Method: {nameof(GetAllFeeDetailsAsync)}\nMessage: {ex.Message}");
+                return Array.Empty<FeeConfigurationDTO>();
             }
         }
 
