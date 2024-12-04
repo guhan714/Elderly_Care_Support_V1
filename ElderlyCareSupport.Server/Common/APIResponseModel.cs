@@ -7,7 +7,7 @@
         public int StatusCode { get; set; } 
         public string StatusMessage { get; set; } = string.Empty;
         public string? ErrorMessage { get; set; }
-
+        public IEnumerable<Error>? Errors { get; set; }
         public APIResponseModel() 
         {
             Success = true;

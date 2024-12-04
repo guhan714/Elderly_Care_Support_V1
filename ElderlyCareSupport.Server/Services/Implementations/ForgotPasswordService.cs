@@ -3,16 +3,19 @@ using ElderlyCareSupport.Server.Services.Interfaces;
 
 namespace ElderlyCareSupport.Server.Services.Implementations
 {
-    public class ForgotPasswordService : IForgotPaswordService
+    public class ForgotPasswordService(IForgotPasswordRepository forgotPasswordRepository, ILogger<ForgotPasswordService> logger) : IForgotPaswordService
     {
-        private readonly IForgotPasswordRepository _repository;
-        public ForgotPasswordService(IForgotPasswordRepository forgotPasswordRepository)
-        {
-            this._repository = forgotPasswordRepository;
-        }
         public async Task<string> GetForgotPassword(string userName)
         {
-            return await _repository.GetPasswordAsync(userName);
+            try
+            {
+                return await Task.FromResult(await forgotPasswordRepository.GetPasswordAsync(userName) ?? String.Empty);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Exception has been occurred in the {nameof(ForgotPasswordService)} Method: {nameof(GetForgotPassword)} Exception: {ex.Message}");
+                return String.Empty;
+            }
         }
     }
 }

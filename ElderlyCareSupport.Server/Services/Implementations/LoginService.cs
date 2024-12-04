@@ -4,27 +4,19 @@ using ElderlyCareSupport.Server.ViewModels;
 
 namespace ElderlyCareSupport.Server.Services.Implementations
 {
-    public class LoginService : ILoginService
+    public class LoginService(ILoginRepository _loginRepository, ILogger<LoginService> logger) : ILoginService
     {
-        private readonly ILoginRepository loginRepository;
-        private readonly ILogger<LoginService> logger;
-        public LoginService(ILoginRepository _loginRepository, ILogger<LoginService> logger)
-        {
-            loginRepository = _loginRepository;
-            this.logger = logger;
-        }
-
         public async Task<bool> AuthenticateLogin(LoginViewModel loginViewModel)
         {
             try
             {
-                logger.LogInformation("Started Login Authentication from {ClassName}\nAt Method: {MethodName}", nameof(LoginService), nameof(AuthenticateLogin));
-                return await loginRepository.AuthenticateLogin(loginViewModel);
+                logger.LogInformation($"Started Login Authentication from {nameof(LoginService)}\nAt Method: {nameof(AuthenticateLogin)}");
+                return await _loginRepository.AuthenticateLogin(loginViewModel);
             }
             catch (Exception ex)
             {
-                logger.LogError("Exception Occurred in the Login Authentication from {ClassName}\nAt Method: {MethodName}\nException Message: {Message}", nameof(LoginService), nameof(AuthenticateLogin), ex.Message);
-                return false;
+                logger.LogError($"Exception Occurred in the Login Authentication from {nameof(LoginService)}\nAt Method: {nameof(AuthenticateLogin)}\nException Message: {ex.Message}");
+                return await Task.FromResult(false);
             }
         }
     }

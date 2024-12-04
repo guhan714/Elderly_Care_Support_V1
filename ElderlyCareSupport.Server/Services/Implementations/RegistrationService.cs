@@ -4,14 +4,19 @@ using ElderlyCareSupport.Server.ViewModels;
 
 namespace ElderlyCareSupport.Server.Services.Implementations
 {
-    public class RegistrationService : IRegistrationService
+    public class RegistrationService(IRegistrationRepository registrationRepository, ILogger<RegistrationService> logger) : IRegistrationService
     {
-        private readonly IRegistrationRepository registrationRepository;
-        private readonly ILogger<RegistrationService> logger;
-        public RegistrationService(IRegistrationRepository registrationRepository, ILogger<RegistrationService> logger)
+        public async Task<bool> checkUserExistingAlready(string email)
         {
-            this.registrationRepository = registrationRepository;
-            this.logger = logger;
+            try
+            {
+                return await registrationRepository.CheckExistingUser(email);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Exception Occurred: {ex.Message}");
+                return await Task.FromResult(false);
+            }
         }
 
         public async Task<bool> RegisterUserAsync(RegistrationViewModel registrationViewModel)
@@ -19,22 +24,21 @@ namespace ElderlyCareSupport.Server.Services.Implementations
             try
             {
                 var result = await registrationRepository.RegisterUser(registrationViewModel);
-
                 if (result)
                 {
-                    logger.LogInformation("Started Registering User Details from {ClassName}\nAt Method: {MethodName}", nameof(RegistrationService), nameof(RegisterUserAsync));
-                    return result;
+                    logger.LogInformation($"Started Registering User Details from {nameof(RegistrationService)} At Method: {nameof(RegisterUserAsync)}");
+                    return await Task.FromResult(result);
                 }
                 else
                 {
-                    logger.LogWarning("Can't Register User Details from {ClassName}\nAt Method: {MethodName}", nameof(RegistrationService), nameof(RegisterUserAsync));
-                    return false;
+                    logger.LogWarning($"Can't Register User Details from {nameof(RegistrationService)}\nAt Method: {nameof(RegisterUserAsync)}");
+                    return await Task.FromResult(false);
                 }
             }
             catch (Exception ex)
             {
-                logger.LogError("Error Registering User Details from {ClassName}\nAt Method: {MethodName}\nException: {Exception}", nameof(RegistrationService), nameof(RegisterUserAsync), ex.Message);
-                return false;
+                logger.LogError($"Error Registering User Details from {nameof(RegistrationService)}\nAt Method: {nameof(RegisterUserAsync)}\nException: {ex.Message}");
+                return await Task.FromResult(false);
             }
         }
     }

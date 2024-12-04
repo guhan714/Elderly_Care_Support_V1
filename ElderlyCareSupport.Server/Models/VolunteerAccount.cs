@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ElderlyCareSupport.Server.Models;
 
-public partial class ElderCareAccount
+public partial class VolunteerAccount
 {
     public long Id { get; set; }
 
@@ -33,5 +33,5 @@ public partial class ElderCareAccount
 
     public long UserType { get; set; }
 
-    public bool? IsActive { get; set; }
+    public bool IsActive { get; set; }
 }

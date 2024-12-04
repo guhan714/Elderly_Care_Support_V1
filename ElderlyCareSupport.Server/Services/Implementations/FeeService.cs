@@ -1,39 +1,32 @@
-﻿using ElderlyCareSupport.Server.Models;
+﻿using ElderlyCareSupport.Server.DTOs;
+using ElderlyCareSupport.Server.Models;
 using ElderlyCareSupport.Server.Repositories.Interfaces;
 using ElderlyCareSupport.Server.Services.Interfaces;
 
 namespace ElderlyCareSupport.Server.Services.Implementations
 {
-    public class FeeService : IFeeService
+    public class FeeService(IFeeRepository feeRepository, ILogger<FeeService> logger) : IFeeService
     {
-        private readonly IFeeRepository _feeRepository;
-        private readonly ILogger<FeeService> _logger;
-        public FeeService(IFeeRepository feeRepository, ILogger<FeeService> logger)
-        {
-            _feeRepository = feeRepository;
-            _logger = logger;   
-        }
-
-        public async Task<List<FeeConfiguration>> GetAllFeeDetails()
+        public async Task<IEnumerable<FeeConfigurationDTO>> GetAllFeeDetails()
         {
             try
             {
-                var feeDetails = await _feeRepository.GetAllFeeDetails();
-                if (feeDetails.Count >= 1)
+                 var feeDetails = await feeRepository.GetAllFeeDetailsAsync();
+                if (feeDetails.Any())
                 {
-                    _logger.LogInformation("Started Fetching Fee Details from {ClassName}\nAt Method: {MethodName}", nameof(FeeService), nameof(GetAllFeeDetails));
+                    logger.LogInformation($"Started Fetching Fee Details from {nameof(FeeService)}\nAt Method: {nameof(GetAllFeeDetails)}");
                     return feeDetails;
                 }
                 else
                 {
-                    _logger.LogWarning("Can't Fetch Fee Details from {ClassName}\nAt Method: {MethodName}", nameof(FeeService), nameof(GetAllFeeDetails));
-                    return new List<FeeConfiguration>();
+                    logger.LogWarning($"Can't Fetch Fee Details from {nameof(FeeService)}\nAt Method: {nameof(GetAllFeeDetails)}");
+                    return feeDetails;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error Fetching Fee Details from {ClassName}\nAt Method: {MethodName}\nException Message: {Message}", nameof(FeeService), nameof(GetAllFeeDetails), ex.Message);
-                return new List<FeeConfiguration>();
+                logger.LogError($"Error Fetching Fee Details from {nameof(FeeService)}\nAt Method: {nameof(GetAllFeeDetails)}\nException Message: {ex.Message}");
+                return [];
             }
         }
     }
