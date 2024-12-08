@@ -4,14 +4,14 @@ using ElderlyCareSupport.Server.ViewModels;
 
 namespace ElderlyCareSupport.Server.Services.Implementations
 {
-    public class LoginService(ILoginRepository _loginRepository, ILogger<LoginService> logger) : ILoginService
+    public class LoginService(ILoginRepository loginRepository, ILogger<LoginService> logger) : ILoginService
     {
         public async Task<bool> AuthenticateLogin(LoginViewModel loginViewModel)
         {
             try
             {
                 logger.LogInformation($"Started Login Authentication from {nameof(LoginService)}\nAt Method: {nameof(AuthenticateLogin)}");
-                return await _loginRepository.AuthenticateLogin(loginViewModel);
+                return await loginRepository.AuthenticateLogin(loginViewModel);
             }
             catch (Exception ex)
             {

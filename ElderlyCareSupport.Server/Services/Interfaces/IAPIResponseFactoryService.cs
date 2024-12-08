@@ -2,8 +2,8 @@
 
 namespace ElderlyCareSupport.Server.Services.Interfaces
 {
-    public interface IAPIResponseFactoryService
+    public interface IApiResponseFactoryService
     {
-        APIResponseModel<T> CreateResponse<T>(T? data, bool success, string statusMessage, string? errorMessage = null, IEnumerable<Error>? error = null) where T : class;
+        ApiResponseModel<T> CreateResponse<T>(T? data, bool success, string statusMessage, string? errorMessage = null, IEnumerable<Error>? error = null) where T : class;
     }
 }

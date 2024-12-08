@@ -1,13 +1,12 @@
 ﻿using ElderlyCareSupport.Server.Common;
 using ElderlyCareSupport.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Refit;
 
 namespace ElderlyCareSupport.Server.Helpers
 {
-    public class ModelValidatorHelper(IAPIResponseFactoryService aPIResponseFactoryService) : IModelValidatorService
+    public class ModelValidatorHelper(IApiResponseFactoryService aPiResponseFactoryService) : IModelValidatorService
     {
-        public APIResponseModel<IEnumerable<string>> ValidateModelState(ModelStateDictionary modelStateDictionary)
+        public ApiResponseModel<List<string>> ValidateModelState(ModelStateDictionary modelStateDictionary)
         {
             var errorList = modelStateDictionary
                             .Where(m => m.Value!.Errors.Any())
@@ -15,11 +14,11 @@ namespace ElderlyCareSupport.Server.Helpers
                             .Select(e => new Error { ErrorName = e.ErrorMessage})
                             .ToArray();
 
-            return aPIResponseFactoryService.CreateResponse(
-                data: (IEnumerable<string>)[],
+            return aPiResponseFactoryService.CreateResponse(
+                data: Array.Empty<string>().ToList(),
                 success: false,
-                statusMessage: CommonConstants.STATUS_MESSAGE_BAD_REQUEST,
-                errorMessage: CommonConstants.VALIDATION_ERROR_MESSAGE,
+                statusMessage: CommonConstants.StatusMessageBadRequest,
+                errorMessage: CommonConstants.ValidationErrorMessage,
                 error: errorList
             );
         }

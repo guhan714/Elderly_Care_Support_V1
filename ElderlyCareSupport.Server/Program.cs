@@ -2,7 +2,6 @@ using ElderlyCareSupport.Server.Common;
 using ElderlyCareSupport.Server.Contexts;
 using ElderlyCareSupport.Server.DTOs;
 using ElderlyCareSupport.Server.Helpers;
-using ElderlyCareSupport.Server.Models;
 using ElderlyCareSupport.Server.Repositories.Implementations;
 using ElderlyCareSupport.Server.Repositories.Interfaces;
 using ElderlyCareSupport.Server.Services.Implementations;
@@ -10,9 +9,7 @@ using ElderlyCareSupport.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
 
@@ -30,7 +27,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ElderlyCareSupportContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("ElderDB")));
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ElderDB"));
+});
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -43,7 +42,7 @@ builder.Services.AddAuthentication(option => { option.DefaultAuthenticateScheme 
 })
     .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
@@ -51,7 +50,7 @@ builder.Services.AddAuthentication(option => { option.DefaultAuthenticateScheme 
             ValidateIssuerSigningKey = true,
             ValidIssuer = "https://localhost:44313",
             ValidAudience = "https://localhost:44313",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("WEFOHOBCWEOIB2399012730123NIONCOANSDCQWEDJOQOIAHGCAOIUBCIOOPWQIE"))
+            IssuerSigningKey = new SymmetricSecurityKey("WEFOHOBCWEOIB2399012730123NIONCOANSDCQWEDJOQOIAHGCAOIUBCIOOPWQIE"u8.ToArray())
         };
     });
 builder.Services.AddAuthorization();
@@ -64,8 +63,8 @@ builder.Services.AddScoped<IRegistrationService, RegistrationService>();
 builder.Services.AddScoped<IFeeService, FeeService>();
 builder.Services.AddScoped<IForgotPaswordService, ForgotPasswordService>();
 builder.Services.AddScoped<ITokenService, TokenGenerator>();
-builder.Services.AddScoped<IUserProfileService<ElderUserDTO>, ElderlyUserServices<ElderUserDTO>>();
-builder.Services.AddScoped<IAPIResponseFactoryService, APIResponseFactory>();
+builder.Services.AddScoped<IUserProfileService<ElderUserDto>, ElderlyUserServices<ElderUserDto>>();
+builder.Services.AddScoped<IApiResponseFactoryService, ApiResponseFactory>();
 builder.Services.AddScoped<IModelValidatorService, ModelValidatorHelper>();
 builder.Services.AddScoped<IClock, ClockService>();
 //
@@ -73,7 +72,8 @@ builder.Services.AddScoped<IFeeRepository, FeeRepository>();
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();   
 builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();   
 builder.Services.AddScoped<IForgotPasswordRepository, ForgotPasswordRepository>();   
-builder.Services.AddScoped<IUserRepository<ElderUserDTO>, ElderlyUserRepository<ElderUserDTO>>();   
+builder.Services.AddScoped<IUserRepository<ElderUserDto>, ElderlyUserRepository<ElderUserDto>>();   
+builder.Services.AddScoped<IUserRepository<VolunteerUserDto>, VolunteerUserRepository<VolunteerUserDto>>();   
 
 var app = builder.Build();
 

@@ -2,6 +2,15 @@
 {
     public class Error
     {
-        public string? ErrorName {  get; set; } = String.Empty;
+        public Error()
+        {
+        }
+
+        public Error(string? errorName)
+        {
+            ErrorName = errorName;
+        }
+
+        public string? ErrorName {  get; set; } = string.Empty;
     }
 }

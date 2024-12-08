@@ -6,15 +6,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElderlyCareSupport.Server.Services.Implementations
 {
-    public class VolunteerUserService<T>(ILogger<VolunteerUserDTO> logger, IUserRepository<VolunteerUserDTO> volunteerRepository) : IUserProfileService<T> where T : VolunteerUserDTO, new()
+    public class VolunteerUserService<T>(ILogger<VolunteerUserDto> logger, IUserRepository<VolunteerUserDto> volunteerRepository) : IUserProfileService<T> where T : VolunteerUserDto, new()
     {
 
-        public async Task<T> GetUserDetails(string emailID)
+        public async Task<T?> GetUserDetails(string emailId)
         {
-            T userDetails = new T();
+            var userDetails = new T();
             try
             {
-                var result = await RetryHelper.RetryAsync(() => volunteerRepository.GetUserDetailsAsync(emailID), 3, logger);
+                var result = await RetryHelper.RetryAsync(() => volunteerRepository.GetUserDetailsAsync(emailId), 3, logger);
                 return result as T ?? userDetails;
             }
             catch (Exception ex)
@@ -24,14 +24,14 @@ namespace ElderlyCareSupport.Server.Services.Implementations
             }
         }
          
-        public async Task<bool> UpdateUserDetails(string emailID, T volunteerCareAccount)
+        public async Task<bool> UpdateUserDetails(string emailId, T? volunteerCareAccount)
         {
             try
             {
                 if (volunteerCareAccount is null)
                     return false;
 
-                var updateResult = await volunteerRepository.UpdateUserDetailsAsync(emailID, volunteerCareAccount);
+                var updateResult = await volunteerRepository.UpdateUserDetailsAsync(emailId, volunteerCareAccount);
                 return updateResult;
             }
             catch (DbUpdateConcurrencyException ex)

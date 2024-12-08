@@ -1,41 +1,37 @@
 ﻿using ElderlyCareSupport.Server.Common;
 using ElderlyCareSupport.Server.DTOs;
-using ElderlyCareSupport.Server.Helpers;
-using ElderlyCareSupport.Server.Models;
 using ElderlyCareSupport.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Asn1.Cmp;
 
 namespace ElderlyCareSupport.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
-    public class ElderlyUserController(IUserProfileService<ElderUserDTO> elderlyUserProfileService, IAPIResponseFactoryService aPIResponseFactoryService, IModelValidatorService modelValidatorService) : ControllerBase
+    public class ElderlyUserController(IUserProfileService<ElderUserDto> elderlyUserProfileService, IApiResponseFactoryService aPiResponseFactoryService, IModelValidatorService modelValidatorService) : ControllerBase
     {
-        [HttpGet("GetElderlyUserDetails/{emailID}")]
+        [HttpGet("GetElderlyUserDetails/{emailId}")]
         [Authorize]
-        public async Task<IActionResult> GetElderlyUsersList(string emailID)
+        public async Task<IActionResult> GetElderlyUserDetails(string emailId)
         {
-            var elderlyUser = await elderlyUserProfileService.GetUserDetails(emailID);
-
-            return Ok(aPIResponseFactoryService.CreateResponse(success: true, statusMessage: CommonConstants.STATUS_MESSAGE_OK, data: elderlyUser));
+            var elderlyUser = await elderlyUserProfileService.GetUserDetails(emailId);
+            return elderlyUser is null ? Ok(aPiResponseFactoryService.CreateResponse(success: false, statusMessage: CommonConstants.StatusMessageNotFound, data: elderlyUser)) : Ok(aPiResponseFactoryService.CreateResponse(success: true, statusMessage: CommonConstants.StatusMessageOk, data: elderlyUser));
         }
 
-        [HttpPut("UpdateElderlyUserDetails/{emailID}")]
+        [HttpPut("UpdateElderlyUserDetails/{emailId}")]
         [Authorize]
-        public async Task<IActionResult> UpdateElderDetails(string emailID,[FromBody] ElderUserDTO elderCareAccount)
+        public async Task<IActionResult> UpdateElderDetails(string emailId,[FromBody] ElderUserDto? elderCareAccount)
         {
             if (!ModelState.IsValid)
             {
                 var errorMessage = modelValidatorService.ValidateModelState(ModelState);
-                return (Ok(errorMessage));
+                return Ok(errorMessage);
             }
 
-            var updateResult = await elderlyUserProfileService.UpdateUserDetails(emailID,elderCareAccount);
+            var updateResult = await elderlyUserProfileService.UpdateUserDetails(emailId,elderCareAccount);
 
-            return Ok(aPIResponseFactoryService.CreateResponse(success: true, statusMessage: CommonConstants.STATUS_MESSAGE_OK, data: new List<string>()));
+            return Ok(aPiResponseFactoryService.CreateResponse(success: updateResult, statusMessage: CommonConstants.StatusMessageOk, data: new List<string>()));
         }
 
 

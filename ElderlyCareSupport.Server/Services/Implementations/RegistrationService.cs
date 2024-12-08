@@ -1,4 +1,5 @@
-﻿using ElderlyCareSupport.Server.Repositories.Interfaces;
+﻿using ElderlyCareSupport.Server.Helpers;
+using ElderlyCareSupport.Server.Repositories.Interfaces;
 using ElderlyCareSupport.Server.Services.Interfaces;
 using ElderlyCareSupport.Server.ViewModels;
 
@@ -6,7 +7,7 @@ namespace ElderlyCareSupport.Server.Services.Implementations
 {
     public class RegistrationService(IRegistrationRepository registrationRepository, ILogger<RegistrationService> logger) : IRegistrationService
     {
-        public async Task<bool> checkUserExistingAlready(string email)
+        public async Task<bool> CheckUserExistingAlready(string email)
         {
             try
             {
@@ -23,17 +24,15 @@ namespace ElderlyCareSupport.Server.Services.Implementations
         {
             try
             {
+                registrationViewModel.Password = CryptographyHelper.EncryptPassword(registrationViewModel.Password);
                 var result = await registrationRepository.RegisterUser(registrationViewModel);
                 if (result)
                 {
                     logger.LogInformation($"Started Registering User Details from {nameof(RegistrationService)} At Method: {nameof(RegisterUserAsync)}");
                     return await Task.FromResult(result);
                 }
-                else
-                {
-                    logger.LogWarning($"Can't Register User Details from {nameof(RegistrationService)}\nAt Method: {nameof(RegisterUserAsync)}");
-                    return await Task.FromResult(false);
-                }
+                logger.LogWarning($"Can't Register User Details from {nameof(RegistrationService)}\nAt Method: {nameof(RegisterUserAsync)}");
+                return await Task.FromResult(false);
             }
             catch (Exception ex)
             {

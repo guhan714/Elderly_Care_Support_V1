@@ -5,9 +5,9 @@ namespace ElderlyCareSupport.Server.Models;
 
 public partial class FeeConfiguration
 {
-    public decimal FeeId { get; set; }
+    public decimal FeeId { get; init; }
 
-    public string FeeName { get; set; } = null!;
+    public string FeeName { get; init; } = null!;
 
-    public decimal FeeAmount { get; set; }
+    public decimal FeeAmount { get; init; }
 }

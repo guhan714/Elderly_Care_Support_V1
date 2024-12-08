@@ -1,11 +1,8 @@
 ﻿using ElderlyCareSupport.Server.Contexts;
-using ElderlyCareSupport.Server.Models;
 using ElderlyCareSupport.Server.Repositories.Interfaces;
 using ElderlyCareSupport.Server.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
-using System.Security.Cryptography;
-using System.Web.Http.ModelBinding;
+using ElderlyCareSupport.Server.Helpers;
 
 namespace ElderlyCareSupport.Server.Repositories.Implementations
 {
@@ -13,18 +10,16 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
     {
         public async Task<bool> AuthenticateLogin(LoginViewModel loginViewModel)
         {
-            var authenticatedUser = await elderlyCareSupport.ElderCareAccounts.FirstOrDefaultAsync(t => t.Email == loginViewModel.Email && t.Password == loginViewModel.Password && t.UserType == Convert.ToInt64( loginViewModel.UserType));
+            var authenticatedUser = await elderlyCareSupport.ElderCareAccounts.FirstOrDefaultAsync(t => t.Email == loginViewModel.Email && t.UserType == Convert.ToInt64( loginViewModel.UserType));
+            var isAuthenticated =
+                authenticatedUser?.Password is not null && CryptographyHelper.VerifyPassword(loginViewModel.Password, authenticatedUser.Password);
             try
             {
-                if (authenticatedUser != null)
-                {
-                    return await Task.FromResult(true);
-                }
-                return await Task.FromResult(false);
+                return isAuthenticated;
             }
             catch (Exception exp)
             {
-                logger.LogError($"Exception occurred {exp.Message}.\nClass: {nameof(LoginRepository)}\tMethod: {nameof(AuthenticateLogin)}");
+                logger.LogError("Exception occurred {Message}.\nClass: {nameof(LoginRepository)}\tMethod: {nameof(AuthenticateLogin)}", exp.Message, nameof(LoginRepository), nameof(AuthenticateLogin));
                 return await Task.FromResult(false);
             }
         }

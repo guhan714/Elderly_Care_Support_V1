@@ -3,7 +3,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Collections.Generic;
 
 namespace ElderlyCareSupport.Server.Helpers
 {
@@ -12,22 +11,20 @@ namespace ElderlyCareSupport.Server.Helpers
         private readonly string _issuer;
         private readonly string _audience;
         private readonly string _secretKey;
-        private readonly IConfigurationSection data;
-        private readonly JwtSecurityTokenHandler tokenHandler;
-        private readonly IClock clock;
-        private readonly ILogger<TokenGenerator> logger;
+        private readonly JwtSecurityTokenHandler _tokenHandler = new();
+        private readonly IClock _clock;
+        private readonly ILogger<TokenGenerator> _logger;
         public TokenGenerator(IConfiguration configuration, IClock clock, ILogger<TokenGenerator> logger)
         {
-            data = configuration.GetSection("JWT");
+            var data = configuration.GetSection("JWT");
             _issuer = data["Issuer"]!;
             _audience = data["Audience"]!;
             _secretKey = data["SecretKey"]!;
-            tokenHandler = new();
-            this.clock = clock;
-            this.logger = logger;
+            _clock = clock;
+            _logger = logger;
         }
 
-        public SecurityTokenDescriptor ConfigureJWTToken(string userName)
+        public SecurityTokenDescriptor? ConfigureJwtToken(string userName)
         {
             try
             {
@@ -38,9 +35,9 @@ namespace ElderlyCareSupport.Server.Helpers
                     Subject = new ClaimsIdentity([new Claim(ClaimTypes.Name, userName)]),
                     Issuer = _issuer,
                     Audience = _audience,
-                    IssuedAt = clock.GetDateTime(),
-                    Expires = clock.GetDateTime().AddMinutes(15),
-                    SigningCredentials = signingCredentials,
+                    IssuedAt = _clock.GetDateTime(),
+                    Expires = _clock.GetDateTime().AddMinutes(15),
+                    SigningCredentials = signingCredentials
                 };
 
                 return tokenDescriptor;
@@ -48,17 +45,17 @@ namespace ElderlyCareSupport.Server.Helpers
 
             catch (Exception ex)
             {
-                logger.LogError("Exception occurred. {Exception}.", ex.Message);
+                _logger.LogError("Exception occurred. {Exception}.", ex.Message);
                 return null;
             }
         }
 
-        public string GenerateJWTToken(string userName)
+        public string GenerateJwtToken(string userName)
         {
             try
             {
-                var token = tokenHandler.CreateToken(ConfigureJWTToken(userName));
-                return tokenHandler.WriteToken(token);
+                var token = _tokenHandler.CreateToken(ConfigureJwtToken(userName));
+                return _tokenHandler.WriteToken(token);
             }
             catch (Exception)
             {

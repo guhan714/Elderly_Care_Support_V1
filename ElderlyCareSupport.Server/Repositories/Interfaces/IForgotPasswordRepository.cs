@@ -2,6 +2,6 @@
 {
     public interface IForgotPasswordRepository
     {
-        Task<string> GetPasswordAsync(string userName);
+        Task<string?> GetPasswordAsync(string userName);
     }
 }

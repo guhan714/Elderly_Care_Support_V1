@@ -6,31 +6,52 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElderlyCareSupport.Server.Repositories.Implementations
 {
-    public class VolunteerUserRepository<T>(ElderlyCareSupportContext elderlyCareSupportContext, ILogger<T> logger, IMapper mapper) : IUserRepository<T> where T : VolunteerUserDTO, new()
+    public class VolunteerUserRepository<T>(ElderlyCareSupportContext elderlyCareSupportContext, ILogger<T> logger, IMapper mapper) : IUserRepository<T> where T : VolunteerUserDto, new()
     {
         public Task<bool> DeleteUserDetailsAsync(string email)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<T> GetUserDetailsAsync(string emailID)
+        public async Task<T?> GetUserDetailsAsync(string emailId)
         {
-            T volunteerUser = new();
             try
             {
-                var userDetails = await elderlyCareSupportContext.VolunteerAccounts.Where(user => user.Email == emailID).FirstOrDefaultAsync();
-                volunteerUser = mapper.Map<T>(userDetails);
+                var userDetails = await elderlyCareSupportContext.VolunteerAccounts.Where(user => user.Email == emailId).FirstOrDefaultAsync();
+                var volunteerUser = mapper.Map<T>(userDetails);
                 return volunteerUser;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return volunteerUser;
+                return null;
             }
         }
 
-        public Task<bool> UpdateUserDetailsAsync(string emailID, T elderCareAccount)
+        public async Task<bool> UpdateUserDetailsAsync(string emailId, T elderCareAccount)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var userDetails = await elderlyCareSupportContext.VolunteerAccounts.FirstOrDefaultAsync(user => user.Email.Equals(emailId));
+                if (userDetails == null)
+                    return false;
+
+                userDetails.FirstName = elderCareAccount.FirstName;
+                userDetails.LastName = elderCareAccount.LastName;
+                userDetails.PhoneNumber = elderCareAccount.PhoneNumber;
+                userDetails.Address = elderCareAccount.Address;
+                userDetails.City = elderCareAccount.City;
+                userDetails.Country = elderCareAccount.Country;
+                userDetails.Region = elderCareAccount.Region;
+                userDetails.Gender = elderCareAccount.Gender;
+                userDetails.PostalCode = elderCareAccount.PostalCode;
+
+                await elderlyCareSupportContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
