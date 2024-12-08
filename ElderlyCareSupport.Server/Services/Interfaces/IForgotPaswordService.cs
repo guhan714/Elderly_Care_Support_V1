@@ -2,6 +2,6 @@
 {
     public interface IForgotPaswordService
     {
-        Task<string> GetForgotPassword(string userName);
+        Task<string?> GetForgotPassword(string userName);
     }
 }

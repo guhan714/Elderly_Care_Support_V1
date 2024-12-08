@@ -5,9 +5,9 @@ namespace ElderlyCareSupport.Server.Services.Interfaces
 {
     public interface IUserProfileService<T> where T : class
     {
-        Task<T> GetUserDetails(string emailID);
+        Task<T?> GetUserDetails(string emailId);
 
-        Task<bool> UpdateUserDetails(string emailID, T elderCareAccount);
+        Task<bool> UpdateUserDetails(string emailId, T? elderCareAccount);
 
         Task<bool> DeleteUserDetails(string email);
     }

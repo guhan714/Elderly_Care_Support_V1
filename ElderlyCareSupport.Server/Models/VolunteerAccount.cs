@@ -5,17 +5,17 @@ namespace ElderlyCareSupport.Server.Models;
 
 public partial class VolunteerAccount
 {
-    public long Id { get; set; }
+    public long Id { get; init; }
 
     public string FirstName { get; set; } = null!;
 
     public string? LastName { get; set; }
 
-    public string Email { get; set; } = null!;
+    public string Email { get; init; } = null!;
 
-    public string Password { get; set; } = null!;
+    public string Password { get; init; } = null!;
 
-    public string ConfirmPassword { get; set; } = null!;
+    public string ConfirmPassword { get; init; } = null!;
 
     public long PhoneNumber { get; set; }
 
@@ -31,7 +31,7 @@ public partial class VolunteerAccount
 
     public string Country { get; set; } = null!;
 
-    public long UserType { get; set; }
+    public long UserType { get; init; }
 
-    public bool IsActive { get; set; }
+    public bool IsActive { get; init; }
 }

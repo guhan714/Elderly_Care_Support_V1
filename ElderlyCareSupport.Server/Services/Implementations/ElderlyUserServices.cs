@@ -1,46 +1,43 @@
-﻿using AutoMapper;
-using ElderlyCareSupport.Server.DTOs;
+﻿using ElderlyCareSupport.Server.DTOs;
 using ElderlyCareSupport.Server.Helpers;
-using ElderlyCareSupport.Server.Models;
-using ElderlyCareSupport.Server.Repositories.Implementations;
 using ElderlyCareSupport.Server.Repositories.Interfaces;
 using ElderlyCareSupport.Server.Services.Interfaces;
 
 namespace ElderlyCareSupport.Server.Services.Implementations
 {
-    public class ElderlyUserServices<T>(ILogger<ElderlyUserServices<T>> logger, IUserRepository<ElderUserDTO> elderlyUserRepository) : IUserProfileService<T> where T : ElderUserDTO, new()
+    public class ElderlyUserServices<T>(ILogger<ElderlyUserServices<T>> logger, IUserRepository<ElderUserDto> elderlyUserRepository) : IUserProfileService<T> where T : ElderUserDto, new()
     {
-        public async Task<T> GetUserDetails(string emailID) 
+        public async Task<T?> GetUserDetails(string emailId) 
         {
             try
             {
-                var result = await RetryHelper.RetryAsync(() => elderlyUserRepository.GetUserDetailsAsync(emailID), 3, logger);
-                return result as T ?? new T();
+                var result = await RetryHelper.RetryAsync(() => elderlyUserRepository.GetUserDetailsAsync(emailId), 3, logger);
+                return result as T;
             }
             catch (Exception ex)
             {
-                logger.LogError(message: String.Format(format: $"Error Fetching Data {{0}}", arg0: ex.Message));
-                return  await Task.FromResult(new T());
+                logger.LogError($"Error Fetching Data {ex.Message}");
+                return null;
             }
         }
 
-        public async Task<bool> UpdateUserDetails(string emailID, T elderUserDTO)
+        public async Task<bool> UpdateUserDetails(string emailId, T? elderUserDto)
         {
             try
             {
-                if (elderUserDTO is null)
+                if (elderUserDto is null)
                 {
                     return await Task.FromResult(false);
                 }
 
-                var result = await elderlyUserRepository.UpdateUserDetailsAsync(emailID,elderUserDTO);
+                var result = await elderlyUserRepository.UpdateUserDetailsAsync(emailId,elderUserDto);
 
-                return await Task.FromResult(result ? await Task.FromResult(true) : await Task.FromResult(false));
+                return result;
             }
 
             catch (Exception)
             {
-                return await Task.FromResult(false);
+                return false;
             }
             
         }
@@ -49,7 +46,5 @@ namespace ElderlyCareSupport.Server.Services.Implementations
         {
             return Task.FromResult(false);
         }
-
-       
     }
 }

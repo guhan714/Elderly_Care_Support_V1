@@ -1,10 +1,10 @@
 ﻿namespace ElderlyCareSupport.Server.Helpers
 {
-    public class RetryHelper
+    public static class RetryHelper
     {
-        public static async Task<TResult> RetryAsync<TResult>(Func<Task<TResult>> action, int maxRetries, ILogger logger)
+        public static async Task<TResult?> RetryAsync<TResult>(Func<Task<TResult>> action, int maxRetries, ILogger logger)
         {
-            int attempt = 0;
+            var attempt = 0;
             while (attempt < maxRetries)
             {
                 try
@@ -13,7 +13,7 @@
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError($"Error: {ex.Message}");
+                    logger.LogError("Error: {Message}", ex.Message);
                     attempt++;
                     throw;
                 }

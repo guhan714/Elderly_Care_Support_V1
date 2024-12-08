@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ElderlyCareSupport.Server.Models;
+﻿using ElderlyCareSupport.Server.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ElderlyCareSupport.Server.Contexts;
@@ -16,11 +14,11 @@ public partial class ElderlyCareSupportContext : DbContext
     {
     }
 
-    public virtual DbSet<ElderCareAccount> ElderCareAccounts { get; set; }
+    public virtual DbSet<ElderCareAccount> ElderCareAccounts { get; init; }
 
-    public virtual DbSet<FeeConfiguration> FeeConfigurations { get; set; }
+    public virtual DbSet<FeeConfiguration> FeeConfigurations { get; init; }
 
-    public virtual DbSet<VolunteerAccount> VolunteerAccounts { get; set; }
+    public virtual DbSet<VolunteerAccount> VolunteerAccounts { get; init; }
 
    
     protected override void OnModelCreating(ModelBuilder modelBuilder)

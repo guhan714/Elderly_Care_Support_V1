@@ -1,52 +1,16 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Security.Cryptography;
-
-namespace ElderlyCareSupport.Server.Helpers
+﻿namespace ElderlyCareSupport.Server.Helpers
 {
-    public class CryptographyHelper
+    public static class CryptographyHelper
     {
-        public static byte[] EncryptPassword(string plainText, byte[] Key, byte[] IV)
+        public static string EncryptPassword(string plainText)
         {
-            byte[] encrypted;
-            using (AesManaged aes = new())
-            {
-                ICryptoTransform encryptor = aes.CreateEncryptor(Key, IV);
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
-                    {
-                        using (StreamWriter sw = new StreamWriter(cs))
-                            sw.Write(plainText);
-                        encrypted = ms.ToArray();
-                    }
-                }
-            }
+            var encrypted = BCrypt.Net.BCrypt.HashPassword(plainText);
             return encrypted;
         }
 
-        public string DecryptPassword(byte[] cipherText, byte[] Key, byte[] IV)
+        public static bool VerifyPassword(string password, string hashedPassword)
         {
-            string plaintext = String.Empty;
-            try
-            {
-                using (AesManaged aes = new())
-                {
-                    ICryptoTransform decryptor = aes.CreateDecryptor(Key, IV);
-                    using (MemoryStream ms = new MemoryStream(cipherText))
-                    {
-                        using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
-                        {
-                            using (StreamReader reader = new StreamReader(cs))
-                                plaintext = reader.ReadToEnd();
-                        }
-                    }
-                }
-                return plaintext;
-            }
-            catch (Exception ex)
-            {
-                return plaintext = String.Empty;
-            }
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
     }
 }

@@ -2,41 +2,38 @@
 using ElderlyCareSupport.Server.Contexts;
 using ElderlyCareSupport.Server.Controllers;
 using ElderlyCareSupport.Server.DTOs;
-using ElderlyCareSupport.Server.Helpers;
-using ElderlyCareSupport.Server.Models;
 using ElderlyCareSupport.Server.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ElderlyCareSupport.Server.Repositories.Implementations
 {
-    public class ElderlyUserRepository<T>(ElderlyCareSupportContext careSupportContext, ILogger<ElderlyUserRepository<T>> logger, IMapper mapper) : IUserRepository<T> where T: ElderUserDTO, new()
+    public class ElderlyUserRepository<T>(ElderlyCareSupportContext careSupportContext, ILogger<ElderlyUserRepository<T>> logger, IMapper mapper) : IUserRepository<T> where T: ElderUserDto, new()
     {
 
-        public async Task<T> GetUserDetailsAsync(string emailID)
+        public async Task<T?> GetUserDetailsAsync(string emailId)
         {
-            T elderUserDTO = new();
             try
             {
-                var result = await careSupportContext.ElderCareAccounts.Where(user => user.Email == emailID).FirstOrDefaultAsync();
-                elderUserDTO = mapper.Map<T>(result);
+                var result = await careSupportContext.ElderCareAccounts.Where(user => user.Email == emailId).FirstOrDefaultAsync();
+                var elderUserDto = mapper.Map<T>(result);
                 logger.LogInformation($"The process has been started to fetch the ElderlyUserDetails... At {nameof(ElderlyUserController)}\tMethod: {nameof(GetUserDetailsAsync)}");
-                return elderUserDTO;
+                return elderUserDto;
             }
             catch (Exception ex)
             {
-                logger.LogError($"Error Occurred During {nameof(GetUserDetailsAsync)} and Excpetion: {ex.Message}");
-                return (elderUserDTO);
+                logger.LogError("Error Occurred During {Method} and Exception: {Message}", nameof(GetUserDetailsAsync), ex.Message);
+                return null;
             }
         }
 
-        public async Task<bool> UpdateUserDetailsAsync(string emailID, T elderCareAccount)
+        public async Task<bool> UpdateUserDetailsAsync(string emailId, T elderCareAccount)
         {
             try
             {
-                var result = await careSupportContext.ElderCareAccounts.AsQueryable().FirstOrDefaultAsync(e => e.Email.Equals(emailID));
+                var result = await careSupportContext.ElderCareAccounts.FirstOrDefaultAsync(e => e.Email.Equals(emailId));
 
-                if ((result is null))
+                if (result is null)
                 {
                     return false;
                 }
@@ -57,21 +54,21 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
             catch (DbUpdateConcurrencyException ex)
             {
                 logger.LogError("Error occurred during {MethodName}. Exception: {ExceptionMessage}",
-                    [nameof(GetUserDetailsAsync), ex.Message]);
+                    nameof(GetUserDetailsAsync), ex.Message);
                 return false;
             }
         }
 
         [ValidateAntiForgeryToken]
-        public async Task<bool> DeleteUserDetailsAsync(string email)
+        public Task<bool> DeleteUserDetailsAsync(string email)
         {
             try
             {
-                return await Task.FromResult(true);
+                return Task.FromResult(true);
             }
             catch (Exception ex)
             {
-                return await Task.FromResult(ex.InnerException == null);
+                return Task.FromResult(ex.InnerException == null);
             }
         }
     }
