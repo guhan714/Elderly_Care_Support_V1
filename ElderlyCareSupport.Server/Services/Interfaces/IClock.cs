@@ -2,6 +2,7 @@
 {
     public interface IClock
     {
-        DateTime GetDateTime();
+        DateTime Now { get; }
+        DateTime NowUtc { get; }
     }
 }

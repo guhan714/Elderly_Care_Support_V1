@@ -11,16 +11,16 @@ namespace ElderlyCareSupport.Server.Controllers
     [Authorize]
     public class VolunteerUserController(IUserProfileService<VolunteerUserDto> userProfileService, IApiResponseFactoryService responseFactoryService, IModelValidatorService modelValidatorService) : ControllerBase
     {
-        [HttpGet("GetVolunteerDetails/{emailId}")]
-        public async Task<IActionResult> GetVolunteertUserDetailsById(string emailId)
+        [HttpGet($"{nameof(GetVolunteerUserDetailsById)}/{{emailId}}")]
+        public async Task<IActionResult> GetVolunteerUserDetailsById(string emailId)
         {
             var volunteerUser = await userProfileService.GetUserDetails(emailId);
-            return Ok(responseFactoryService.CreateResponse(data: volunteerUser, success: true, statusMessage: CommonConstants.StatusMessageOk));
+            return volunteerUser is not null ? Ok(responseFactoryService.CreateResponse(data: volunteerUser, success: true, statusMessage: CommonConstants.StatusMessageOk)) : Ok(responseFactoryService.CreateResponse(data: volunteerUser, success: false, statusMessage: CommonConstants.StatusMessageNotFound, error: [new Error(){ErrorName = string.Format(CommonConstants.NotFound, nameof(User))}]));
         }
 
-        [HttpPut("UpdateVolunteerUserDetails/{emailId}")]
+        [HttpPut($"{nameof(UpdateElderDetailsById)}/{{emailId}}")]
         [Authorize]
-        public async Task<IActionResult> UpdateElderDetails(string emailId, [FromBody] VolunteerUserDto? elderCareAccount)
+        public async Task<IActionResult> UpdateElderDetailsById(string emailId, [FromBody] VolunteerUserDto? elderCareAccount)
         {
             if (!ModelState.IsValid)
             {

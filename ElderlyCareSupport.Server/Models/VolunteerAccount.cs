@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ElderlyCareSupport.Server.Models;
+﻿namespace ElderlyCareSupport.Server.Models;
 
 public partial class VolunteerAccount
 {

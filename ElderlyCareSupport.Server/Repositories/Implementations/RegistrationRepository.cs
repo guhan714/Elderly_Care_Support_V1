@@ -23,7 +23,7 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
 
                 if (changes >= 1)
                 {
-                    logger.LogInformation("Registration successful for user: {registrationViewModel.Email}", nameof(registrationViewModel.Email));
+                    logger.LogInformation("Registration successful for user: {Email}", nameof(registrationViewModel.Email));
                     return true;
                 }
                 logger.LogWarning("Registration failed, no changes were saved for user: {registrationViewModel.Email}", nameof(registrationViewModel.Email));
@@ -41,8 +41,9 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
         {
             try
             {
-                var isExistingUser = await elderlyCareSupportContext.ElderCareAccounts.FirstOrDefaultAsync(user => user.Email == email);
-                return isExistingUser is not null;
+                var localMail = email;
+                var isExistingUser = await elderlyCareSupportContext.ElderCareAccounts.AnyAsync(user => user.Email == localMail);
+                return isExistingUser;
             }
             catch (Exception ex) 
             {

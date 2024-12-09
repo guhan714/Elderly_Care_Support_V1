@@ -24,19 +24,19 @@ namespace ElderlyCareSupport.Server.Helpers
             _logger = logger;
         }
 
-        public SecurityTokenDescriptor? ConfigureJwtToken(string userName)
+        public SecurityTokenDescriptor? ConfigureToken(string userName)
         {
             try
             {
                 var key = Encoding.UTF8.GetBytes(_secretKey);
-                SigningCredentials signingCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
+                SigningCredentials signingCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature);
                 SecurityTokenDescriptor tokenDescriptor = new()
                 {
                     Subject = new ClaimsIdentity([new Claim(ClaimTypes.Name, userName)]),
                     Issuer = _issuer,
                     Audience = _audience,
-                    IssuedAt = _clock.GetDateTime(),
-                    Expires = _clock.GetDateTime().AddMinutes(15),
+                    IssuedAt = _clock.NowUtc,
+                    Expires = _clock.NowUtc.AddMinutes(15),
                     SigningCredentials = signingCredentials
                 };
 
@@ -50,11 +50,12 @@ namespace ElderlyCareSupport.Server.Helpers
             }
         }
 
-        public string GenerateJwtToken(string userName)
+        public string GenerateToken(string userName)
         {
             try
             {
-                var token = _tokenHandler.CreateToken(ConfigureJwtToken(userName));
+                var config = ConfigureToken(userName);
+                var token = _tokenHandler.CreateToken(config);
                 return _tokenHandler.WriteToken(token);
             }
             catch (Exception)

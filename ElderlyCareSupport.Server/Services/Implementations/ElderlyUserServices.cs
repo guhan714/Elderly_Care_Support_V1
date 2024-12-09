@@ -16,7 +16,7 @@ namespace ElderlyCareSupport.Server.Services.Implementations
             }
             catch (Exception ex)
             {
-                logger.LogError($"Error Fetching Data {ex.Message}");
+                logger.LogError("Error Fetching Data {Message}",ex.Message);
                 return null;
             }
         }
@@ -27,7 +27,7 @@ namespace ElderlyCareSupport.Server.Services.Implementations
             {
                 if (elderUserDto is null)
                 {
-                    return await Task.FromResult(false);
+                    return false;
                 }
 
                 var result = await elderlyUserRepository.UpdateUserDetailsAsync(emailId,elderUserDto);

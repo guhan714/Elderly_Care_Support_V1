@@ -2,7 +2,7 @@
 
 namespace ElderlyCareSupport.Server.DTOs
 {
-    public class VolunteerUserDto()
+    public class VolunteerUserDto
     {
             public string FirstName { get; } = string.Empty;
             public string? LastName { get; }
@@ -12,7 +12,7 @@ namespace ElderlyCareSupport.Server.DTOs
             public string City { get; } = string.Empty;
             public string Region { get; } = string.Empty;
             public string Country { get; } = string.Empty;
-            public long PhoneNumber { get; }
+            public long PhoneNumber { get; set; }
             public long PostalCode { get;}
             public UsersType UserType { get; set; }
     }

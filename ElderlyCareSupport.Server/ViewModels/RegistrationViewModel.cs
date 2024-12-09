@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Serialization;
-using System.ComponentModel.DataAnnotations;
-using System.Runtime.InteropServices;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ElderlyCareSupport.Server.ViewModels
 {
@@ -21,7 +19,7 @@ namespace ElderlyCareSupport.Server.ViewModels
         [Required]
         [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
         ErrorMessage = "Invalid email address format.")]
-        public string Email { get; set; } = null!;
+        public string Email { get; init; } = null!;
 
         [MinLength(8)]
         [MaxLength(200)]

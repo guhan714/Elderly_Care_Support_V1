@@ -1,7 +1,4 @@
-﻿using ElderlyCareSupport.Server.DTOs;
-using ElderlyCareSupport.Server.Models;
-
-namespace ElderlyCareSupport.Server.Services.Interfaces
+﻿namespace ElderlyCareSupport.Server.Services.Interfaces
 {
     public interface IUserProfileService<T> where T : class
     {
