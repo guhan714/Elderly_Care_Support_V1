@@ -11,7 +11,7 @@ namespace ElderlyCareSupport.Server.Controllers
     [Produces("application/json")]
     public class ElderlyUserController(IUserProfileService<ElderUserDto> elderlyUserProfileService, IApiResponseFactoryService aPiResponseFactoryService, IModelValidatorService modelValidatorService) : ControllerBase
     {
-        [HttpGet("GetElderlyUserDetails/{emailId}")]
+        [HttpGet($"{nameof(GetElderlyUserDetails)}/{{emailId}}")]
         [Authorize]
         public async Task<IActionResult> GetElderlyUserDetails(string emailId)
         {
@@ -19,7 +19,7 @@ namespace ElderlyCareSupport.Server.Controllers
             return elderlyUser is null ? Ok(aPiResponseFactoryService.CreateResponse(success: false, statusMessage: CommonConstants.StatusMessageNotFound, data: elderlyUser)) : Ok(aPiResponseFactoryService.CreateResponse(success: true, statusMessage: CommonConstants.StatusMessageOk, data: elderlyUser));
         }
 
-        [HttpPut("UpdateElderlyUserDetails/{emailId}")]
+        [HttpPut($"{nameof(UpdateElderDetails)}/{{emailId}}")]
         [Authorize]
         public async Task<IActionResult> UpdateElderDetails(string emailId,[FromBody] ElderUserDto? elderCareAccount)
         {

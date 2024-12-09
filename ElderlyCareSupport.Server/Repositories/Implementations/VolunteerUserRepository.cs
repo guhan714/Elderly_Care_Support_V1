@@ -17,9 +17,8 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
         {
             try
             {
-                var userDetails = await elderlyCareSupportContext.VolunteerAccounts.Where(user => user.Email == emailId).FirstOrDefaultAsync();
-                var volunteerUser = mapper.Map<T>(userDetails);
-                return volunteerUser;
+                var userDetails = await elderlyCareSupportContext.VolunteerAccounts.FirstOrDefaultAsync(user => user.Email == emailId);
+                return mapper.Map<T>(userDetails);
             }
             catch (Exception)
             {
@@ -31,7 +30,8 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
         {
             try
             {
-                var userDetails = await elderlyCareSupportContext.VolunteerAccounts.FirstOrDefaultAsync(user => user.Email.Equals(emailId));
+                var id = emailId;
+                var userDetails = await elderlyCareSupportContext.VolunteerAccounts.FirstOrDefaultAsync(user => user.Email.Equals(id));
                 if (userDetails == null)
                     return false;
 

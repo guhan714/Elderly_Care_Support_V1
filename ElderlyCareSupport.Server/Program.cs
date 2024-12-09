@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,7 +54,7 @@ builder.Services.AddAuthentication(option => { option.DefaultAuthenticateScheme 
     });
 builder.Services.AddAuthorization();
 builder.Services.AddLogging();
-
+builder.Services.AddMemoryCache();
 
 // 
 builder.Services.AddScoped<ILoginService, LoginService>();
@@ -64,6 +63,7 @@ builder.Services.AddScoped<IFeeService, FeeService>();
 builder.Services.AddScoped<IForgotPaswordService, ForgotPasswordService>();
 builder.Services.AddScoped<ITokenService, TokenGenerator>();
 builder.Services.AddScoped<IUserProfileService<ElderUserDto>, ElderlyUserServices<ElderUserDto>>();
+builder.Services.AddScoped<IUserProfileService<VolunteerUserDto>, VolunteerUserService<VolunteerUserDto>>();
 builder.Services.AddScoped<IApiResponseFactoryService, ApiResponseFactory>();
 builder.Services.AddScoped<IModelValidatorService, ModelValidatorHelper>();
 builder.Services.AddScoped<IClock, ClockService>();

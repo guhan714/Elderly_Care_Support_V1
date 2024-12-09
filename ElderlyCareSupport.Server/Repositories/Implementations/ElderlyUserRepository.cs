@@ -10,19 +10,17 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
 {
     public class ElderlyUserRepository<T>(ElderlyCareSupportContext careSupportContext, ILogger<ElderlyUserRepository<T>> logger, IMapper mapper) : IUserRepository<T> where T: ElderUserDto, new()
     {
-
         public async Task<T?> GetUserDetailsAsync(string emailId)
         {
             try
             {
-                var result = await careSupportContext.ElderCareAccounts.Where(user => user.Email == emailId).FirstOrDefaultAsync();
-                var elderUserDto = mapper.Map<T>(result);
+                var result = await careSupportContext.ElderCareAccounts.FirstOrDefaultAsync(user => user.Email.Equals(emailId));
                 logger.LogInformation($"The process has been started to fetch the ElderlyUserDetails... At {nameof(ElderlyUserController)}\tMethod: {nameof(GetUserDetailsAsync)}");
-                return elderUserDto;
+                return mapper.Map<T>(result);
             }
             catch (Exception ex)
             {
-                logger.LogError("Error Occurred During {Method} and Exception: {Message}", nameof(GetUserDetailsAsync), ex.Message);
+                logger.LogError($"Error Occurred During {nameof(GetUserDetailsAsync)} and Exception: { ex.Message}");
                 return null;
             }
         }
@@ -49,7 +47,7 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
                 result.Gender = elderCareAccount.Gender;
 
                 await careSupportContext.SaveChangesAsync();
-                return await Task.FromResult(true);
+                return true;
             }
             catch (DbUpdateConcurrencyException ex)
             {

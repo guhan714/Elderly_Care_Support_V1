@@ -1,7 +1,6 @@
 ﻿using ElderlyCareSupport.Server.DTOs;
 using ElderlyCareSupport.Server.Repositories.Interfaces;
 using ElderlyCareSupport.Server.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ElderlyCareSupport.Server.Services.Implementations
 {

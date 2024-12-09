@@ -1,7 +1,4 @@
-﻿using ElderlyCareSupport.Server.DTOs;
-using ElderlyCareSupport.Server.Models;
-
-namespace ElderlyCareSupport.Server.Repositories.Interfaces
+﻿namespace ElderlyCareSupport.Server.Repositories.Interfaces
 {
     public interface IUserRepository<T> where T : class
     {

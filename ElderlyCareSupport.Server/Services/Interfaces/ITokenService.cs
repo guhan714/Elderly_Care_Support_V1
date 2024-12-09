@@ -4,7 +4,7 @@ namespace ElderlyCareSupport.Server.Services.Interfaces
 {
     public interface ITokenService
     {
-        string GenerateJwtToken(string user);
-        SecurityTokenDescriptor? ConfigureJwtToken(string userName);
+        string GenerateToken(string user);
+        SecurityTokenDescriptor? ConfigureToken(string userName);
     }
 }

@@ -10,7 +10,9 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
     {
         public async Task<bool> AuthenticateLogin(LoginViewModel loginViewModel)
         {
-            var authenticatedUser = await elderlyCareSupport.ElderCareAccounts.FirstOrDefaultAsync(t => t.Email == loginViewModel.Email && t.UserType == Convert.ToInt64( loginViewModel.UserType));
+            var userMail = loginViewModel.Email;
+            var userType = loginViewModel.UserType;
+            var authenticatedUser = await elderlyCareSupport.ElderCareAccounts.FirstOrDefaultAsync(t => t.Email == userMail && t.UserType == Convert.ToInt64(userType));
             var isAuthenticated =
                 authenticatedUser?.Password is not null && CryptographyHelper.VerifyPassword(loginViewModel.Password, authenticatedUser.Password);
             try

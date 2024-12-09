@@ -8,8 +8,8 @@ namespace ElderlyCareSupport.Server.ViewModels
         [Required(ErrorMessage = "User name is required")]
         [EmailAddress]
         [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
-        ErrorMessage = "Invalid email address format.")]
-        public string Email { get; } = string.Empty;
+            ErrorMessage = "Invalid email address format.")]
+        public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]

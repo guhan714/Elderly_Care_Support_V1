@@ -11,16 +11,15 @@ namespace ElderlyCareSupport.Server.Services.Implementations
 
         public async Task<T?> GetUserDetails(string emailId)
         {
-            var userDetails = new T();
             try
             {
                 var result = await RetryHelper.RetryAsync(() => volunteerRepository.GetUserDetailsAsync(emailId), 3, logger);
-                return result as T ?? userDetails;
+                return result as T ?? null;
             }
             catch (Exception ex)
             {
                 logger.LogError("Exception Occurred : {Exception}.", ex.Message);
-                return userDetails;
+                return null;
             }
         }
          
