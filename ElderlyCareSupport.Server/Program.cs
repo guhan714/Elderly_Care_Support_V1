@@ -1,3 +1,4 @@
+using System.Text;
 using ElderlyCareSupport.Server.Common;
 using ElderlyCareSupport.Server.Contexts;
 using ElderlyCareSupport.Server.DTOs;
@@ -13,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var jwtSettings = builder.Configuration.GetSection(("JWT"));
 builder.Host.UseSerilog((context, configuration) =>
 {
     configuration.ReadFrom.Configuration(context.Configuration);
@@ -35,23 +36,23 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddAuthentication(option => { option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    option.RequireAuthenticatedSignIn= true;
-})
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        options.Authority = jwtSettings["Issuer"];
+        options.Audience = jwtSettings["ClientId"]; // This is the Client ID you created in Keycloak
+        options.RequireHttpsMetadata = false; // For development purposes only. Set to true in production.
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = "https://localhost:44313",
-            ValidAudience = "https://localhost:44313",
-            IssuerSigningKey = new SymmetricSecurityKey("WEFOHOBCWEOIB2399012730123NIONCOANSDCQWEDJOQOIAHGCAOIUBCIOOPWQIE"u8.ToArray())
+            ValidAudience = "ElderlyCareAccountClient",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!)),
+            // Client Secret from Keycloak
         };
     });
+
 builder.Services.AddAuthorization();
 builder.Services.AddLogging();
 builder.Services.AddMemoryCache();
@@ -67,14 +68,15 @@ builder.Services.AddScoped<IUserProfileService<VolunteerUserDto>, VolunteerUserS
 builder.Services.AddScoped<IApiResponseFactoryService, ApiResponseFactory>();
 builder.Services.AddScoped<IModelValidatorService, ModelValidatorHelper>();
 builder.Services.AddScoped<IClock, ClockService>();
+builder.Services.AddScoped<IEmailService, EmailHelper>();
 //
 builder.Services.AddScoped<IFeeRepository, FeeRepository>();   
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();   
 builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();   
 builder.Services.AddScoped<IForgotPasswordRepository, ForgotPasswordRepository>();   
 builder.Services.AddScoped<IUserRepository<ElderUserDto>, ElderlyUserRepository<ElderUserDto>>();   
-builder.Services.AddScoped<IUserRepository<VolunteerUserDto>, VolunteerUserRepository<VolunteerUserDto>>();   
-
+builder.Services.AddScoped<IUserRepository<VolunteerUserDto>, VolunteerUserRepository<VolunteerUserDto>>();
+builder.Services.AddHttpClient();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

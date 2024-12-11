@@ -19,7 +19,6 @@ namespace ElderlyCareSupport.Server.Controllers
         }
 
         [HttpPut($"{nameof(UpdateElderDetailsById)}/{{emailId}}")]
-        [Authorize]
         public async Task<IActionResult> UpdateElderDetailsById(string emailId, [FromBody] VolunteerUserDto? elderCareAccount)
         {
             if (!ModelState.IsValid)

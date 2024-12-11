@@ -1,46 +1,60 @@
-﻿using ElderlyCareSupport.Server.Services.Interfaces;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+﻿using ElderlyCareSupport.Server.ResponseModels;
+using ElderlyCareSupport.Server.Services.Interfaces;
+using IdentityModel.Client;
+using Newtonsoft.Json;
 
 namespace ElderlyCareSupport.Server.Helpers
 {
     public class TokenGenerator : ITokenService
     {
         private readonly string _issuer;
-        private readonly string _audience;
+        private readonly string _clientId;
         private readonly string _secretKey;
-        private readonly JwtSecurityTokenHandler _tokenHandler = new();
-        private readonly IClock _clock;
+        private readonly HttpClient _httpClient;
         private readonly ILogger<TokenGenerator> _logger;
-        public TokenGenerator(IConfiguration configuration, IClock clock, ILogger<TokenGenerator> logger)
+        public TokenGenerator(IConfiguration configuration, ILogger<TokenGenerator> logger, HttpClient httpClient)
         {
-            var data = configuration.GetSection("JWT");
+             var data = configuration.GetSection("JWT");
             _issuer = data["Issuer"]!;
-            _audience = data["Audience"]!;
+            _clientId = data["ClientId"]!;
             _secretKey = data["SecretKey"]!;
-            _clock = clock;
             _logger = logger;
+            _httpClient = httpClient;
         }
 
-        public SecurityTokenDescriptor? ConfigureToken(string userName)
+        public async Task<string?> ConfigureToken()
         {
             try
             {
-                var key = Encoding.UTF8.GetBytes(_secretKey);
-                SigningCredentials signingCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature);
-                SecurityTokenDescriptor tokenDescriptor = new()
+                var client = await _httpClient.GetDiscoveryDocumentAsync(
+                    new DiscoveryDocumentRequest()
+                    {
+                        Address = _issuer,
+                        Policy = { RequireHttps = false }
+                    });
+
+                if (client.IsError)
                 {
-                    Subject = new ClaimsIdentity([new Claim(ClaimTypes.Name, userName)]),
-                    Issuer = _issuer,
-                    Audience = _audience,
-                    IssuedAt = _clock.NowUtc,
-                    Expires = _clock.NowUtc.AddMinutes(15),
-                    SigningCredentials = signingCredentials
+                    _logger.LogError("Discovery Failed");
+                    return string.Empty;
+                }
+
+                var tokenRequest = new ClientCredentialsTokenRequest()
+                {
+                    Address = client.TokenEndpoint,
+                    ClientId = _clientId,
+                    ClientSecret = _secretKey,
+                    ClientCredentialStyle = ClientCredentialStyle.AuthorizationHeader,
+                    GrantType = "authorization_code",  // Use 'authorization_code' flow
                 };
 
-                return tokenDescriptor;
+                var tokenResponse = await _httpClient.RequestClientCredentialsTokenAsync(tokenRequest);
+
+                if (!tokenResponse.IsError) return JsonConvert.SerializeObject(tokenResponse);
+                
+                _logger.LogError(tokenResponse.ErrorDescription ?? tokenResponse.Exception?.Message); 
+                return string.Empty;
+
             }
 
             catch (Exception ex)
@@ -50,17 +64,17 @@ namespace ElderlyCareSupport.Server.Helpers
             }
         }
 
-        public string GenerateToken(string userName)
+        public LoginResponse? GenerateToken()
         {
             try
             {
-                var config = ConfigureToken(userName);
-                var token = _tokenHandler.CreateToken(config);
-                return _tokenHandler.WriteToken(token);
+                var token = ConfigureToken().Result;
+                return !string.IsNullOrEmpty(token) ? JsonConvert.DeserializeObject<LoginResponse>(token) : null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return string.Empty;
+                _logger.LogError("Exception has been occurred : {Exception}", ex.Message);
+                return null;
             }  
         }
 

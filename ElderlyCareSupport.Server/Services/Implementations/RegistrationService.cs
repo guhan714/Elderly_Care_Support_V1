@@ -5,7 +5,7 @@ using ElderlyCareSupport.Server.ViewModels;
 
 namespace ElderlyCareSupport.Server.Services.Implementations
 {
-    public class RegistrationService(IRegistrationRepository registrationRepository, ILogger<RegistrationService> logger) : IRegistrationService
+    public class RegistrationService(IRegistrationRepository registrationRepository, ILogger<RegistrationService> logger, IEmailService emailService) : IRegistrationService
     {
         public async Task<bool> CheckUserExistingAlready(string email)
         {
@@ -29,7 +29,8 @@ namespace ElderlyCareSupport.Server.Services.Implementations
                 if (result)
                 {
                     logger.LogInformation($"Started Registering User Details from {nameof(RegistrationService)} At Method: {nameof(RegisterUserAsync)}");
-                    return await Task.FromResult(result);
+                    await emailService.SendEmailAsync(registrationViewModel.Email);
+                    return result;
                 }
                 logger.LogWarning($"Can't Register User Details from {nameof(RegistrationService)}\nAt Method: {nameof(RegisterUserAsync)}");
                 return await Task.FromResult(false);
