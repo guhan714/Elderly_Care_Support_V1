@@ -40,8 +40,8 @@ namespace ElderlyCareSupport.Server.Controllers
                     statusMessage: CommonConstants.StatusMessageNotFound,
                     errorMessage: string.Format(CommonConstants.NotFound, nameof(User))));
             
-            var token = tokenService.GenerateToken(loginViewModel.Email);
-            return Ok(!string.IsNullOrEmpty(token)
+            var token = tokenService.GenerateToken();
+            return Ok(token is not null
                 ? aPiResponseFactoryService.CreateResponse(data: token, success: true,
                     statusMessage: CommonConstants.StatusMessageOk)
                 : aPiResponseFactoryService.CreateResponse(data: token, success: false,
