@@ -11,6 +11,6 @@
             ErrorName = errorName;
         }
 
-        public string? ErrorName {  get; set; } = string.Empty;
+        public string? ErrorName { get; set; } = string.Empty;
     }
 }
