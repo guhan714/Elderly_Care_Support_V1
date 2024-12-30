@@ -1,9 +1,7 @@
-﻿using System.Net;
-using ElderlyCareSupport.Server.Common;
+﻿using ElderlyCareSupport.Server.Common;
 using ElderlyCareSupport.Server.DTOs;
 using ElderlyCareSupport.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ElderlyCareSupport.Server.Controllers
@@ -12,57 +10,29 @@ namespace ElderlyCareSupport.Server.Controllers
     [ApiController]
     [Produces("application/json")]
     [Authorize]
-    public class ElderlyUserController : ControllerBase
+    public class ElderlyUserController(IUserProfileService<ElderUserDto> elderlyUserProfileService, IApiResponseFactoryService aPiResponseFactoryService, IModelValidatorService modelValidatorService) : ControllerBase
     {
-        private readonly IUserProfileService<ElderUserDto> _elderlyUserProfileService;
-        private readonly IApiResponseFactoryService _aPiResponseFactoryService;
-        private readonly IModelValidatorService _modelValidatorService;
-
-        public ElderlyUserController(IUserProfileService<ElderUserDto> elderlyUserProfileService, IApiResponseFactoryService aPiResponseFactoryService, IModelValidatorService modelValidatorService)
-        {
-            this._elderlyUserProfileService = elderlyUserProfileService;
-            this._aPiResponseFactoryService = aPiResponseFactoryService;
-            this._modelValidatorService = modelValidatorService;
-        }
-
         [HttpGet($"{nameof(GetElderlyUserDetails)}/{{emailId}}")]
         public async Task<IActionResult> GetElderlyUserDetails(string emailId)
         {
-            var elderlyUser = await _elderlyUserProfileService.GetUserDetails(emailId);
-            return elderlyUser is null
-                ? Ok(_aPiResponseFactoryService.CreateResponse(success: false,
-                    code:HttpStatusCode.NoContent,
-                    statusMessage: CommonConstants.StatusMessageNotFound, data: elderlyUser))
-                : Ok(_aPiResponseFactoryService.CreateResponse(success: true,
-                    code:HttpStatusCode.OK,
-                    statusMessage: CommonConstants.StatusMessageOk, data: elderlyUser));
+            var elderlyUser = await elderlyUserProfileService.GetUserDetails(emailId);
+            return elderlyUser is null ? Ok(aPiResponseFactoryService.CreateResponse(success: false, statusMessage: CommonConstants.StatusMessageNotFound, data: elderlyUser)) : Ok(aPiResponseFactoryService.CreateResponse(success: true, statusMessage: CommonConstants.StatusMessageOk, data: elderlyUser));
         }
 
         [HttpPut($"{nameof(UpdateElderDetails)}/{{emailId}}")]
-        public async Task<IActionResult> UpdateElderDetails(string emailId, [FromBody] ElderUserDto? elderCareAccount)
+        public async Task<IActionResult> UpdateElderDetails(string emailId,[FromBody] ElderUserDto? elderCareAccount)
         {
             if (!ModelState.IsValid)
             {
-                var errorMessage = _modelValidatorService.ValidateModelState(ModelState);
+                var errorMessage = modelValidatorService.ValidateModelState(ModelState);
                 return Ok(errorMessage);
             }
 
-            var updateResult = await _elderlyUserProfileService.UpdateUserDetails(emailId, elderCareAccount);
+            var updateResult = await elderlyUserProfileService.UpdateUserDetails(emailId,elderCareAccount);
 
-            return Ok(_aPiResponseFactoryService.CreateResponse(success: updateResult,
-                code:HttpStatusCode.Created,
-                statusMessage: CommonConstants.StatusMessageOk, data: new List<string>()));
+            return Ok(aPiResponseFactoryService.CreateResponse(success: updateResult, statusMessage: CommonConstants.StatusMessageOk, data: new List<string>()));
         }
 
-        [HttpPost($"{nameof(CreateTask)}")]
-        public async Task<IActionResult> CreateTask()
-        {
-            if (!ModelState.IsValid)
-            {
-                return Ok(_modelValidatorService.ValidateModelState(ModelState));
-            }
 
-            return Ok();
-        }
     }
 }

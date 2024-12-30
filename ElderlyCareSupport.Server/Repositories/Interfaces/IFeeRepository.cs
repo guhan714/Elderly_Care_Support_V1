@@ -4,6 +4,6 @@ namespace ElderlyCareSupport.Server.Repositories.Interfaces
 {
     public interface IFeeRepository
     {
-        Task<IEnumerable<FeeConfigurationDto>> GetAllFeeDetailsAsync();
+        Task<List<FeeConfigurationDto>> GetAllFeeDetailsAsync();
     }
 }

@@ -1,9 +1,6 @@
-@ElderlyCareSupport.Server_HostAddress = https://localhost:44313
+@ElderlyCareSupport.Server_HostAddress = http://localhost:5109
 
-GET {{ElderlyCareSupport.Server_HostAddress}}/api/ElderlyCareSupportAccount/GetFeeDetails/
+GET {{ElderlyCareSupport.Server_HostAddress}}/weatherforecast/
 Accept: application/json
 
-###
-GET {{ElderlyCareSupport.Server_HostAddress}}/api/ElderlyCareSupportAccount/GetFeeDetails/
-Accept: application/json
 ###

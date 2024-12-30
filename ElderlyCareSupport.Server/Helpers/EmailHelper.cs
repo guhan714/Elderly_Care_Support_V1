@@ -1,37 +1,32 @@
-﻿using ElderlyCareSupport.Server.Common;
-using ElderlyCareSupport.Server.Services.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using SendGrid;
+﻿using ElderlyCareSupport.Server.Services.Implementations;
 using SendGrid.Helpers.Mail;
-using SendGridMessage = SendGrid.Helpers.Mail.SendGridMessage;
+using SendGrid;
 
 namespace ElderlyCareSupport.Server.Helpers;
 
-public class EmailHelper(IConfiguration configuration) : IEmailService
+public class EmailHelper(IConfiguration configuration): IEmailService
 {
-    private readonly IConfiguration _configuration = configuration;
-    public async Task<Tuple<SendGridClient, SendGridMessage>> ConfigureEmailService(string recipient, string userName)
+    public async Task SendEmailAsync(string recipient)
     {
-        var apiKey = _configuration["SendGridAPI"]!;
+        var apiKeySettings = configuration.GetSection("SendGridAPI");
+        var apiKey = apiKeySettings["ApiKey"]; // Replace with your API key
         var client = new SendGridClient(apiKey);
 
-        EmailAddress from = new(CommonConstants.SenderEmailAddress, CommonConstants.SenderNamePlaceHolder);
-        const string subject = CommonConstants.EmailSubject;
+        var from = new EmailAddress("guhan000714@gmail.com", "Sender Name");
+        var subject = "Test Email from SendGrid";
         var to = new EmailAddress(recipient, "Recipient Name");
-        const string plainTextContent = "This is a test email.";
-        var htmlContent = await File.ReadAllTextAsync(CommonConstants.RegistrationMailContentPath);
-        htmlContent = htmlContent.Replace("{{UserName}}", userName);
+        var plainTextContent = "This is a test email.";
+        var htmlContent = "<strong>This is a test email.</strong>";
 
         var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-        return Tuple.Create(client, msg);
-    }
 
-    public async Task SendEmailAsync(string recipient, string userName)
-    {
         try
         {
-            var mailConfiguration = await ConfigureEmailService(recipient, userName);
-            var response = await mailConfiguration.Item1.SendEmailAsync(mailConfiguration.Item2);
+            var response = await client.SendEmailAsync(msg);
+            Console.WriteLine($"Status Code: {response.StatusCode}");
+
+            var responseBody = await response.Body.ReadAsStringAsync();
+            Console.WriteLine($"Response Body: {responseBody}");
         }
         catch (Exception ex)
         {
