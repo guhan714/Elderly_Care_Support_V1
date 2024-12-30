@@ -1,0 +1,34 @@
+version: '3.4'
+
+networks:
+  elderlycaresuppotapi:
+    
+
+services:
+  eldercaresupportdb:
+    container_name: app-db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+        - 8081:1433
+    environment:
+        - ACCEPT_EULA=Y
+        - MSSQL_SA_PASSWORD= guhan712004 
+    networks:
+        - elderlycaresuppotapi
+  elderlycaresupport.server:
+    image: ${DOCKER_REGISTRY-}elderlycaresupportserver
+    build:
+      context: .
+      dockerfile: ElderlyCareSupport.Server/Dockerfile
+
+    ports:
+      - 8081:8081
+    depends_on:
+      - eldercaresupportdb
+    environment:
+      - DB_HOST=eldercaresupportdb
+      - DB_NAME=ElderlyCareSupport
+      - DB_SA_PASSWORD=guhan712004
+    networks:
+        - elderlycaresuppotapi
+ 
