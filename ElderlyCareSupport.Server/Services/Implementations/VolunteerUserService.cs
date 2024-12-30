@@ -6,31 +6,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElderlyCareSupport.Server.Services.Implementations
 {
-    public class VolunteerUserService<T> : IUserProfileService<T> where T : VolunteerUserDto, new()
+    public class VolunteerUserService<T>(ILogger<VolunteerUserDto> logger, IUserRepository<VolunteerUserDto> volunteerRepository) : IUserProfileService<T> where T : VolunteerUserDto, new()
     {
-        private readonly ILogger<VolunteerUserDto> _logger;
-        private readonly IUserRepository<VolunteerUserDto> _volunteerRepository;
-
-        public VolunteerUserService(IUserRepository<VolunteerUserDto> volunteerRepository, ILogger<VolunteerUserDto> logger)
-        {
-            this._volunteerRepository = volunteerRepository;
-            _logger = logger;
-        }
 
         public async Task<T?> GetUserDetails(string emailId)
         {
             try
             {
-                var result = await RetryHelper.RetryAsync(() => _volunteerRepository.GetUserDetailsAsync(emailId), 3, _logger);
+                var result = await RetryHelper.RetryAsync(() => volunteerRepository.GetUserDetailsAsync(emailId), 3, logger);
                 return result as T ?? null;
             }
             catch (Exception ex)
             {
-                _logger.LogError("Exception Occurred : {Exception}.", ex.Message);
+                logger.LogError("Exception Occurred : {Exception}.", ex.Message);
                 return null;
             }
         }
-
+         
         public async Task<bool> UpdateUserDetails(string emailId, T? volunteerCareAccount)
         {
             try
@@ -38,12 +30,12 @@ namespace ElderlyCareSupport.Server.Services.Implementations
                 if (volunteerCareAccount is null)
                     return false;
 
-                var updateResult = await _volunteerRepository.UpdateUserDetailsAsync(emailId, volunteerCareAccount);
+                var updateResult = await volunteerRepository.UpdateUserDetailsAsync(emailId, volunteerCareAccount);
                 return updateResult;
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                _logger.LogError(ex.Message);
+                logger.LogError(ex.Message);
                 return false;
             }
         }

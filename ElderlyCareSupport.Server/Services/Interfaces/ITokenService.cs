@@ -1,10 +1,12 @@
-﻿using ElderlyCareSupport.Server.ResponseModels;
+﻿using ElderlyCareSupport.Server.DTOs;
+using ElderlyCareSupport.Server.ResponseModels;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ElderlyCareSupport.Server.Services.Interfaces
 {
     public interface ITokenService
     {
-        Task<LoginResponse?> GenerateToken();
+        LoginResponse? GenerateToken();
         Task<string?> ConfigureToken();
     }
 }
