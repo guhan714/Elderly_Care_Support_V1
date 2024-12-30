@@ -20,7 +20,7 @@ public partial class ElderlyCareSupportContext : DbContext
 
     public virtual DbSet<VolunteerAccount> VolunteerAccounts { get; init; }
 
-   
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ElderCareAccount>(entity =>
