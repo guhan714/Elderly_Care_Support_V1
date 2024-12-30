@@ -7,7 +7,7 @@ namespace ElderlyCareSupport.Server.ViewModels
         [Required(ErrorMessage = $"{nameof(FirstName)} should not be empty")]
         [MinLength(3)]
         [MaxLength(200)]
-        public string FirstName { get; set; } = null!; 
+        public string FirstName { get; init; } = null!;
 
         [MinLength(3)]
         [MaxLength(200)]
@@ -31,16 +31,16 @@ namespace ElderlyCareSupport.Server.ViewModels
         [MaxLength(200)]
         [DataType(DataType.Password)]
         [Required(ErrorMessage = $"{nameof(ConfirmPassword)} should not be empty")]
-        public string ConfirmPassword {  get; set; } = null!;
+        public string ConfirmPassword { get; set; } = null!;
 
 
         [Required(ErrorMessage = $"{nameof(PhoneNumber)} should not be empty")]
-        public long PhoneNumber {  get; set; }
+        public long PhoneNumber { get; set; }
 
         [MinLength(4)]
         [MaxLength(20)]
         [Required(ErrorMessage = $"{nameof(Gender)} should not be empty")]
-        public string Gender {  get; set; } = null!;
+        public string Gender { get; set; } = null!;
 
         [MaxLength(200)]
         [Required(ErrorMessage = $"{nameof(Address)} should not be empty")]
@@ -62,7 +62,7 @@ namespace ElderlyCareSupport.Server.ViewModels
         public string Country { get; set; } = null!;
 
         [Required(ErrorMessage = $"{nameof(UserType)} should not be empty")]
-        public long UserType {  get; set; }
+        public long UserType { get; set; }
 
     }
 }
