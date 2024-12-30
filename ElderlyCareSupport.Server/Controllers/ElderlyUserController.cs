@@ -9,10 +9,10 @@ namespace ElderlyCareSupport.Server.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
+    [Authorize]
     public class ElderlyUserController(IUserProfileService<ElderUserDto> elderlyUserProfileService, IApiResponseFactoryService aPiResponseFactoryService, IModelValidatorService modelValidatorService) : ControllerBase
     {
         [HttpGet($"{nameof(GetElderlyUserDetails)}/{{emailId}}")]
-        [Authorize]
         public async Task<IActionResult> GetElderlyUserDetails(string emailId)
         {
             var elderlyUser = await elderlyUserProfileService.GetUserDetails(emailId);
@@ -20,7 +20,6 @@ namespace ElderlyCareSupport.Server.Controllers
         }
 
         [HttpPut($"{nameof(UpdateElderDetails)}/{{emailId}}")]
-        [Authorize]
         public async Task<IActionResult> UpdateElderDetails(string emailId,[FromBody] ElderUserDto? elderCareAccount)
         {
             if (!ModelState.IsValid)
