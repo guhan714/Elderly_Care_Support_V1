@@ -3,18 +3,19 @@ using ElderlyCareSupport.Server.Services.Interfaces;
 using IdentityModel.Client;
 using Newtonsoft.Json;
 
+
 namespace ElderlyCareSupport.Server.Helpers
 {
-    public class TokenGenerator : ITokenService
+    public class JwtTokenGenerator : ITokenService
     {
         private readonly string _issuer;
         private readonly string _clientId;
         private readonly string _secretKey;
         private readonly HttpClient _httpClient;
-        private readonly ILogger<TokenGenerator> _logger;
-        public TokenGenerator(IConfiguration configuration, ILogger<TokenGenerator> logger, HttpClient httpClient)
+        private readonly ILogger<JwtTokenGenerator> _logger;
+        public JwtTokenGenerator(IConfiguration configuration, ILogger<JwtTokenGenerator> logger, HttpClient httpClient)
         {
-             var data = configuration.GetSection("JWT");
+            var data = configuration.GetSection("JWT");
             _issuer = data["Issuer"]!;
             _clientId = data["ClientId"]!;
             _secretKey = data["SecretKey"]!;
@@ -27,7 +28,7 @@ namespace ElderlyCareSupport.Server.Helpers
             try
             {
                 var client = await _httpClient.GetDiscoveryDocumentAsync(
-                    new DiscoveryDocumentRequest()
+                    new DiscoveryDocumentRequest
                     {
                         Address = _issuer,
                         Policy = { RequireHttps = false }
@@ -39,46 +40,46 @@ namespace ElderlyCareSupport.Server.Helpers
                     return string.Empty;
                 }
 
-                var tokenRequest = new ClientCredentialsTokenRequest()
+                var tokenRequest = new ClientCredentialsTokenRequest
                 {
                     Address = client.TokenEndpoint,
                     ClientId = _clientId,
                     ClientSecret = _secretKey,
-                    ClientCredentialStyle = ClientCredentialStyle.AuthorizationHeader,
-                    GrantType = "authorization_code",  // Use 'authorization_code' flow
+                    GrantType = "authorization_code",
+                    Scope = "openid offline_access"
                 };
 
                 var tokenResponse = await _httpClient.RequestClientCredentialsTokenAsync(tokenRequest);
 
-                if (!tokenResponse.IsError) return JsonConvert.SerializeObject(tokenResponse);
+                if(tokenResponse.IsError)
+                    _logger.LogError("Token Request Failed. Error: {ErrorDescription}, Exception: {Exception}",
+                        tokenResponse.ErrorDescription, tokenResponse.Exception?.ToString());
+
+                return JsonConvert.SerializeObject(tokenResponse);
                 
-                _logger.LogError(tokenResponse.ErrorDescription ?? tokenResponse.Exception?.Message); 
-                return string.Empty;
-
             }
-
             catch (Exception ex)
             {
                 _logger.LogError("Exception occurred. {Exception}.", ex.Message);
-                return null;
+                return string.Empty;
             }
         }
 
-        public LoginResponse? GenerateToken()
+        public async Task<LoginResponse?> GenerateToken()
         {
             try
             {
-                var token = ConfigureToken().Result;
-                return !string.IsNullOrEmpty(token) ? JsonConvert.DeserializeObject<LoginResponse>(token) : null;
+                var token = await ConfigureToken();
+                return JsonConvert.DeserializeObject<LoginResponse>(token!);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Exception has been occurred : {Exception}", ex.Message);
                 return null;
-            }  
+            }
         }
 
-       
+
     }
 }
 

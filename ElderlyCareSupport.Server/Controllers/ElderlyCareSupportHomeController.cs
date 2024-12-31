@@ -1,4 +1,5 @@
-﻿using ElderlyCareSupport.Server.Common;
+﻿using System.Net;
+using ElderlyCareSupport.Server.Common;
 using ElderlyCareSupport.Server.Services.Interfaces;
 using ElderlyCareSupport.Server.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -9,45 +10,82 @@ namespace ElderlyCareSupport.Server.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
-    public class ElderlyCareSupportAccountController(IFeeService feeService, ILogger<ElderlyCareSupportAccountController> logger, ILoginService loginService, IRegistrationService registrationService, IForgotPaswordService forgotPasswordServicesWordService, ITokenService tokenService, IApiResponseFactoryService aPiResponseFactoryService, IModelValidatorService modelValidatorService) : ControllerBase
+    public class ElderlyCareSupportAccountController : ControllerBase
     {
+        private readonly IFeeService _feeService;
+        private readonly ILogger<ElderlyCareSupportAccountController> _logger;
+        private readonly ILoginService _loginService;
+        private readonly IRegistrationService _registrationService;
+        private readonly IForgotPaswordService _forgotPasswordServicesWordService;
+        private readonly IApiResponseFactoryService _aPiResponseFactoryService;
+        private readonly IModelValidatorService _modelValidatorService;
+
+        public ElderlyCareSupportAccountController(IFeeService feeService,
+            ILogger<ElderlyCareSupportAccountController> logger, ILoginService loginService,
+            IRegistrationService registrationService, IForgotPaswordService forgotPasswordServicesWordService,
+            IApiResponseFactoryService aPiResponseFactoryService, IModelValidatorService modelValidatorService)
+        {
+            _feeService = feeService;
+            _logger = logger;
+            _loginService = loginService;
+            _registrationService = registrationService;
+            _forgotPasswordServicesWordService = forgotPasswordServicesWordService;
+            _aPiResponseFactoryService = aPiResponseFactoryService;
+            _modelValidatorService = modelValidatorService;
+        }
+
         [HttpGet(nameof(GetFeeDetails))]
-        [ResponseCache(Duration = 30)]
         public async Task<IActionResult> GetFeeDetails()
         {
-            var feeConfigurationDto = await feeService.GetAllFeeDetails();
-            if (feeConfigurationDto.Count != 0)
+            var feeConfigurationDto = await _feeService.GetAllFeeDetails();
+            feeConfigurationDto = feeConfigurationDto.ToArray();
+            if (feeConfigurationDto.Any())
             {
-                logger.LogInformation($"Data Successfully fetched from the server...\nClass: {nameof(ElderlyCareSupportAccountController)} Method: {nameof(GetFeeDetails)}");
-                return Ok(aPiResponseFactoryService.CreateResponse(success:true,statusMessage: CommonConstants.StatusMessageOk, data: feeConfigurationDto));
+                _logger.LogInformation(
+                    $"Data Successfully fetched from the server...\nClass: {nameof(ElderlyCareSupportAccountController)} Method: {nameof(GetFeeDetails)}");
+                return Ok(_aPiResponseFactoryService.CreateResponse(success: true,
+                    statusMessage: CommonConstants.StatusMessageOk, code: HttpStatusCode.OK,
+                    data: feeConfigurationDto));
             }
-            logger.LogInformation($"Data Couldn't be fetched from the server...\nClass: {nameof(ElderlyCareSupportAccountController)} Method: {nameof(GetFeeDetails)}");
-            return Ok(aPiResponseFactoryService.CreateResponse(success:false, statusMessage: CommonConstants.StatusMessageNotFound, data: feeConfigurationDto, errorMessage: string.Format(CommonConstants.NotFound, "Fee Details")));
+
+            _logger.LogInformation(
+                $"Data Couldn't be fetched from the server...\nClass: {nameof(ElderlyCareSupportAccountController)} Method: {nameof(GetFeeDetails)}");
+            return Ok(_aPiResponseFactoryService.CreateResponse(success: false,
+                statusMessage: CommonConstants.StatusMessageNotFound, data: feeConfigurationDto,
+                code: HttpStatusCode.NotFound,
+                errorMessage: string.Format(CommonConstants.NotFound, "Fee Details")));
         }
 
         [AllowAnonymous]
         [HttpPost(nameof(Login))]
-        public async Task<IActionResult> Login([FromQuery] LoginViewModel loginViewModel)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
         {
             if (!ModelState.IsValid)
             {
-                var errorMessage = modelValidatorService.ValidateModelState(ModelState);
+                var errorMessage = _modelValidatorService.ValidateModelState(ModelState);
                 return Ok(errorMessage);
             }
-            var result = await loginService.AuthenticateLogin(loginViewModel);
-            if (!result)
-                return Unauthorized(aPiResponseFactoryService.CreateResponse(data: result.ToString(), success: false,
-                    statusMessage: CommonConstants.StatusMessageNotFound,
-                    errorMessage: string.Format(CommonConstants.NotFound, nameof(User))));
-            
-            var token = tokenService.GenerateToken();
-            return Ok(token is not null
-                ? aPiResponseFactoryService.CreateResponse(data: token, success: true,
-                    statusMessage: CommonConstants.StatusMessageOk)
-                : aPiResponseFactoryService.CreateResponse(data: token, success: false,
-                    statusMessage: CommonConstants.StatusMessageBadRequest,
-                    errorMessage: "Can't get the token from the server."));
 
+            var result = await _loginService.AuthenticateLogin(loginViewModel);
+
+            if (result?.Item2 is false)
+                return Unauthorized(_aPiResponseFactoryService.CreateResponse(data: result?.Item1,
+                    success: result!.Item2,
+                    statusMessage: CommonConstants.StatusMessageNotFound,
+                    code: HttpStatusCode.Unauthorized,
+                    errorMessage: "User Not Found"));
+
+            if (string.IsNullOrEmpty(result?.Item1?.AccessToken) && result?.Item2 is true)
+            {
+                return Ok(_aPiResponseFactoryService.CreateResponse(data: result, success: false,
+                    statusMessage: CommonConstants.StatusMessageNotFound,
+                    code: HttpStatusCode.InternalServerError,
+                    errorMessage: "Can't Get token from the Server..."));
+            }
+
+            return Ok(_aPiResponseFactoryService.CreateResponse(data: result?.Item1, success: true,
+                code: HttpStatusCode.OK,
+                statusMessage: CommonConstants.StatusMessageOk));
         }
 
         [AllowAnonymous]
@@ -56,19 +94,29 @@ namespace ElderlyCareSupport.Server.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var errorMessage = modelValidatorService.ValidateModelState(ModelState);
+                var errorMessage = _modelValidatorService.ValidateModelState(ModelState);
                 return Ok(errorMessage);
             }
 
-            var result = registrationService.CheckUserExistingAlready(registerViewModel.Email);
+            var result = _registrationService.CheckUserExistingAlready(registerViewModel.Email);
             if (result.Result)
             {
-                return Ok(aPiResponseFactoryService.CreateResponse(data: Array.Empty<string>(), success: false, statusMessage: CommonConstants.UserAlreadyExisted, error: [new Error { ErrorName = CommonConstants.UserAlreadyExisted }]));
+                return Ok(_aPiResponseFactoryService.CreateResponse(data: Array.Empty<string>(), success: false,
+                    statusMessage: CommonConstants.UserAlreadyExisted,
+                    code: HttpStatusCode.OK,
+                    error: [new Error { ErrorName = CommonConstants.UserAlreadyExisted }]));
             }
 
-            var registrationStatus = await registrationService.RegisterUserAsync(registerViewModel);
+            var registrationStatus = await _registrationService.RegisterUserAsync(registerViewModel);
 
-            return Ok(registrationStatus ? aPiResponseFactoryService.CreateResponse(data: Array.Empty<string>(), success: true, statusMessage: CommonConstants.StatusMessageOk) : aPiResponseFactoryService.CreateResponse(data: registrationStatus.ToString(), success: false, statusMessage: string.Format(CommonConstants.OperationFailedErrorMessage, nameof(RegisterUser)), nameof(RegisterUser)));
+            return Ok(registrationStatus
+                ? _aPiResponseFactoryService.CreateResponse(data: Array.Empty<string>(), success: true,
+                    code: HttpStatusCode.Created,
+                    statusMessage: CommonConstants.StatusMessageOk)
+                : _aPiResponseFactoryService.CreateResponse(data: registrationStatus.ToString(), success: false,
+                    statusMessage: string.Format(CommonConstants.OperationFailedErrorMessage, nameof(RegisterUser)),
+                    code: HttpStatusCode.InternalServerError
+                ));
         }
 
         [AllowAnonymous]
@@ -77,17 +125,21 @@ namespace ElderlyCareSupport.Server.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var errorMessage = modelValidatorService.ValidateModelState(ModelState);
+                var errorMessage = _modelValidatorService.ValidateModelState(ModelState);
                 return Ok(errorMessage);
             }
 
-            var result = await forgotPasswordServicesWordService.GetForgotPassword(emailId);
-            return Ok(string.IsNullOrEmpty(result) ? aPiResponseFactoryService.CreateResponse(data: result, success: false, statusMessage: CommonConstants.StatusMessageNotFound, error: [
-                new Error(errorName: string.Format(CommonConstants.NotFound, nameof(User)))
-            ]) : aPiResponseFactoryService.CreateResponse(data: result, success: true, statusMessage: CommonConstants.StatusMessageOk));
+            var result = await _forgotPasswordServicesWordService.GetForgotPassword(emailId);
+            return Ok(string.IsNullOrEmpty(result)
+                ? _aPiResponseFactoryService.CreateResponse(data: result, success: false,
+                    code:HttpStatusCode.NotFound,
+                    statusMessage: CommonConstants.StatusMessageNotFound, error:
+                    [
+                        new Error(errorName: string.Format(CommonConstants.NotFound, nameof(User)))
+                    ])
+                : _aPiResponseFactoryService.CreateResponse(data: result, success: true,
+                    code:HttpStatusCode.OK,
+                    statusMessage: CommonConstants.StatusMessageOk));
         }
-
     }
-    
-
 }

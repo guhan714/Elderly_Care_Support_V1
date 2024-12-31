@@ -1,9 +1,10 @@
-﻿using ElderlyCareSupport.Server.ViewModels;
+﻿using ElderlyCareSupport.Server.ResponseModels;
+using ElderlyCareSupport.Server.ViewModels;
 
 namespace ElderlyCareSupport.Server.Services.Interfaces
 {
     public interface ILoginService
     {
-        Task<bool> AuthenticateLogin(LoginViewModel loginViewModel);
+        Task<Tuple<LoginResponse?, bool>> AuthenticateLogin(LoginViewModel loginViewModel);
     }
 }

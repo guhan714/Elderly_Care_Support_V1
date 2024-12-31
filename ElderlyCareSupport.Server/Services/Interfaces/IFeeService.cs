@@ -4,6 +4,6 @@ namespace ElderlyCareSupport.Server.Services.Interfaces
 {
     public interface IFeeService
     {
-        Task<List<FeeConfigurationDto>> GetAllFeeDetails();
+        Task<IEnumerable<FeeConfigurationDto>> GetAllFeeDetails();
     }
 }

@@ -11,7 +11,7 @@ namespace ElderlyCareSupport.Server.Helpers
         public MappingProfile()
         {
             CreateMap<RegistrationViewModel, ElderCareAccount>();
-            CreateMap < ElderCareAccount, ElderUserDto>();
+            CreateMap<ElderCareAccount, ElderUserDto>();
             CreateMap<FeeConfiguration, FeeConfigurationDto>();
         }
     }
