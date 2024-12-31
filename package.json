@@ -1,0 +1,17 @@
+{
+  "name": "elderly_care_support_v1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/guhan714/Elderly_Care_Support_V1.git"
+  },
+  "private": true,
+  "dependencies": {
+    "k6": "^0.0.0"
+  }
+}

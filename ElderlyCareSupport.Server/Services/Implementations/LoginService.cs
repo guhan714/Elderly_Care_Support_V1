@@ -2,7 +2,6 @@
 using ElderlyCareSupport.Server.ResponseModels;
 using ElderlyCareSupport.Server.Services.Interfaces;
 using ElderlyCareSupport.Server.ViewModels;
-using IdentityModel.Client;
 
 namespace ElderlyCareSupport.Server.Services.Implementations
 {
@@ -37,7 +36,7 @@ namespace ElderlyCareSupport.Server.Services.Implementations
             catch (Exception ex)
             {
                 _logger.LogError($"Exception Occurred in the Login Authentication from {nameof(LoginService)}\nAt Method: {nameof(AuthenticateLogin)}\nException Message: {ex.Message}");
-                return Tuple.Create(new LoginResponse(){}, false)!;
+                return Tuple.Create(new LoginResponse(), false)!;
             }
         }
     }

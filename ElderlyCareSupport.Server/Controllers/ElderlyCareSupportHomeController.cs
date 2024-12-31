@@ -68,14 +68,14 @@ namespace ElderlyCareSupport.Server.Controllers
 
             var result = await _loginService.AuthenticateLogin(loginViewModel);
 
-            if (result?.Item2 is false)
-                return Unauthorized(_aPiResponseFactoryService.CreateResponse(data: result?.Item1,
-                    success: result!.Item2,
+            if (result.Item2 is false)
+                return Unauthorized(_aPiResponseFactoryService.CreateResponse(data: result.Item1,
+                    success: result.Item2,
                     statusMessage: CommonConstants.StatusMessageNotFound,
                     code: HttpStatusCode.Unauthorized,
                     errorMessage: "User Not Found"));
 
-            if (string.IsNullOrEmpty(result?.Item1?.AccessToken) && result?.Item2 is true)
+            if (string.IsNullOrEmpty(result.Item1?.AccessToken) && result.Item2 is true)
             {
                 return Ok(_aPiResponseFactoryService.CreateResponse(data: result, success: false,
                     statusMessage: CommonConstants.StatusMessageNotFound,

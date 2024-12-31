@@ -15,7 +15,6 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Data;
 using System.Text;
-using Microsoft.Extensions.Configuration.UserSecrets;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetSection("JWT");
