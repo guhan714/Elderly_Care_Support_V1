@@ -3,7 +3,6 @@ using ElderlyCareSupport.Server.Common;
 using ElderlyCareSupport.Server.DTOs;
 using ElderlyCareSupport.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ElderlyCareSupport.Server.Controllers

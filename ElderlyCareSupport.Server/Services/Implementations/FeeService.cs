@@ -11,8 +11,8 @@ namespace ElderlyCareSupport.Server.Services.Implementations
 
         public FeeService(ILogger<FeeService> logger, IFeeRepository feeRepository)
         {
-            this._logger = logger;
-            this._feeRepository = feeRepository;
+            _logger = logger;
+            _feeRepository = feeRepository;
         }
 
         public async Task<IEnumerable<FeeConfigurationDto>> GetAllFeeDetails()
@@ -26,12 +26,12 @@ namespace ElderlyCareSupport.Server.Services.Implementations
                     _logger.LogInformation($"Started Fetching Fee Details from {nameof(FeeService)}\nAt Method: {nameof(GetAllFeeDetails)}");
                     return feeDetails;
                 }
-                _logger.LogWarning($"Can't Fetch Fee Details from {nameof(FeeService)}\nAt Method: {nameof(GetAllFeeDetails)}");
+                _logger.LogWarning("Can't Fetch Fee Details from {ServiceName}\nAt Method: {MethodName}", nameof(FeeService), nameof(GetAllFeeDetails));
                 return feeDetails;
             }
             catch (Exception ex)
             {
-                _logger.LogError(@"Error Fetching Fee Details from {Class}\nAt Method: {Method}\nException Message: {Message}", nameof(FeeService), nameof(GetAllFeeDetails), ex.Message);
+                _logger.LogError("Error Fetching Fee Details from {Class}\nAt Method: {Method}\nException Message: {Message}", nameof(FeeService), nameof(GetAllFeeDetails), ex.Message);
                 return [];
             }
         }

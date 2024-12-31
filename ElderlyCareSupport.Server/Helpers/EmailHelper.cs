@@ -1,6 +1,5 @@
 ﻿using ElderlyCareSupport.Server.Common;
 using ElderlyCareSupport.Server.Services.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using SendGridMessage = SendGrid.Helpers.Mail.SendGridMessage;
@@ -26,16 +25,18 @@ public class EmailHelper(IConfiguration configuration) : IEmailService
         return Tuple.Create(client, msg);
     }
 
-    public async Task SendEmailAsync(string recipient, string userName)
+    public async Task<bool> SendEmailAsync(string recipient, string userName)
     {
         try
         {
             var mailConfiguration = await ConfigureEmailService(recipient, userName);
             var response = await mailConfiguration.Item1.SendEmailAsync(mailConfiguration.Item2);
+            return response.IsSuccessStatusCode;
         }
         catch (Exception ex)
         {
             Console.WriteLine("Error: " + ex.Message);
+            return false;
         }
     }
 }
