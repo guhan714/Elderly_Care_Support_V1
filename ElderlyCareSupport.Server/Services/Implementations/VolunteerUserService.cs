@@ -13,7 +13,7 @@ namespace ElderlyCareSupport.Server.Services.Implementations
 
         public VolunteerUserService(IUserRepository<VolunteerUserDto> volunteerRepository, ILogger<VolunteerUserDto> logger)
         {
-            this._volunteerRepository = volunteerRepository;
+            _volunteerRepository = volunteerRepository;
             _logger = logger;
         }
 

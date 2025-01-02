@@ -17,11 +17,12 @@ namespace ElderlyCareSupport.Server.Controllers
         private readonly IApiResponseFactoryService _aPiResponseFactoryService;
         private readonly IModelValidatorService _modelValidatorService;
 
-        public ElderlyUserController(IUserProfileService<ElderUserDto> elderlyUserProfileService, IApiResponseFactoryService aPiResponseFactoryService, IModelValidatorService modelValidatorService)
+        public ElderlyUserController(IUserProfileService<ElderUserDto> elderlyUserProfileService,
+            IApiResponseFactoryService aPiResponseFactoryService, IModelValidatorService modelValidatorService)
         {
-            this._elderlyUserProfileService = elderlyUserProfileService;
-            this._aPiResponseFactoryService = aPiResponseFactoryService;
-            this._modelValidatorService = modelValidatorService;
+            _elderlyUserProfileService = elderlyUserProfileService;
+            _aPiResponseFactoryService = aPiResponseFactoryService;
+            _modelValidatorService = modelValidatorService;
         }
 
         [HttpGet($"{nameof(GetElderlyUserDetails)}/{{emailId}}")]
@@ -30,10 +31,11 @@ namespace ElderlyCareSupport.Server.Controllers
             var elderlyUser = await _elderlyUserProfileService.GetUserDetails(emailId);
             return elderlyUser is null
                 ? Ok(_aPiResponseFactoryService.CreateResponse(success: false,
-                    code:HttpStatusCode.NoContent,
-                    statusMessage: CommonConstants.StatusMessageNotFound, data: elderlyUser))
+                    code: HttpStatusCode.NoContent,
+                    statusMessage: CommonConstants.StatusMessageNotFound, data: elderlyUser,
+                    errorMessage: string.Format(CommonConstants.NotFound, "user")))
                 : Ok(_aPiResponseFactoryService.CreateResponse(success: true,
-                    code:HttpStatusCode.OK,
+                    code: HttpStatusCode.OK,
                     statusMessage: CommonConstants.StatusMessageOk, data: elderlyUser));
         }
 
@@ -49,7 +51,7 @@ namespace ElderlyCareSupport.Server.Controllers
             var updateResult = await _elderlyUserProfileService.UpdateUserDetails(emailId, elderCareAccount);
 
             return Ok(_aPiResponseFactoryService.CreateResponse(success: updateResult,
-                code:HttpStatusCode.Created,
+                code: HttpStatusCode.Created,
                 statusMessage: CommonConstants.StatusMessageOk, data: new List<string>()));
         }
 

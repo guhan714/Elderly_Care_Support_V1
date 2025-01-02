@@ -1,18 +1,19 @@
-﻿namespace ElderlyCareSupport.Server.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace ElderlyCareSupport.Server.Models;
 
 public partial class ElderCareAccount
 {
-    public long Id { get; init; }
+    public long Id { get; set; }
 
     public string FirstName { get; set; } = null!;
 
     public string? LastName { get; set; }
 
-    public string Email { get; init; } = null!;
+    public string Email { get; set; } = null!;
 
-    public string Password { get; init; } = null!;
-
-    public string ConfirmPassword { get; init; } = null!;
+    public string Password { get; set; } = null!;
 
     public long PhoneNumber { get; set; }
 
@@ -28,7 +29,9 @@ public partial class ElderCareAccount
 
     public string Country { get; set; } = null!;
 
-    public long UserType { get; init; }
+    public long UserType { get; set; }
 
-    public bool? IsActive { get; init; }
+    public bool? IsActive { get; set; }
+
+    public byte[] RowVersion { get; set; } = null!;
 }

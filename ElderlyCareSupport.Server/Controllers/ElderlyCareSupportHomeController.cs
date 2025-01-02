@@ -68,9 +68,10 @@ namespace ElderlyCareSupport.Server.Controllers
 
             var result = await _loginService.AuthenticateLogin(loginViewModel);
 
-            if (result.Item2 is false)
-                return Unauthorized(_aPiResponseFactoryService.CreateResponse(data: result.Item1,
-                    success: result.Item2,
+            if (result?.Item2 is false)
+                return Unauthorized(_aPiResponseFactoryService.CreateResponse(data: result,
+                    success: result!.Item2,
+
                     statusMessage: CommonConstants.StatusMessageNotFound,
                     code: HttpStatusCode.Unauthorized,
                     errorMessage: "User Not Found"));
@@ -83,7 +84,7 @@ namespace ElderlyCareSupport.Server.Controllers
                     errorMessage: "Can't Get token from the Server..."));
             }
 
-            return Ok(_aPiResponseFactoryService.CreateResponse(data: result?.Item1, success: true,
+            return Ok(_aPiResponseFactoryService.CreateResponse(data: result, success: true,
                 code: HttpStatusCode.OK,
                 statusMessage: CommonConstants.StatusMessageOk));
         }

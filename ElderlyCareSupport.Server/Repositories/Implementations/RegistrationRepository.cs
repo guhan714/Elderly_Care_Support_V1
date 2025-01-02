@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Dapper;
-using ElderlyCareSupport.Server.Contexts;
 using ElderlyCareSupport.Server.Models;
 using ElderlyCareSupport.Server.Repositories.Interfaces;
 using ElderlyCareSupport.Server.ViewModels;
 using System.Data;
+using ElderlyCareSupport.Server.Contexts;
 
 namespace ElderlyCareSupport.Server.Repositories.Implementations
 {
