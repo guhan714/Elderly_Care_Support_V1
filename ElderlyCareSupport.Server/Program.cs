@@ -18,6 +18,7 @@ using ElderlyCareSupport.Server.Contexts;
 using ElderlyCareSupport.Server.Models;
 using Microsoft.Extensions.Configuration.UserSecrets;
 
+
 var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetSection("JWT");
 

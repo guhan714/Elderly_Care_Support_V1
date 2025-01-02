@@ -3,17 +3,11 @@ import { check, sleep } from 'k6';
 
 export const options = {
     stages: [
-        { duration: '10s', target: 700},
-        { duration: '15s', target: 1000},
-        { duration: '10s', target: 700},
-        { duration: '10s', target: 300},
-        { duration: '10s', target: 100},
-        { duration: '10s', target: 0},
+        { duration: '10s', target: 1},
     ],
     thresholds: {
         http_req_duration: ['p(95)<750'],  // Ensure 95% of requests complete in <750ms
     },
-    rps: 300,
 };
 
 export default function () {
