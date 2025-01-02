@@ -11,7 +11,8 @@ public static class DomainToDtoMapper
         {
             FeeId = fee.FeeId,
             FeeName = fee.FeeName,
-            FeeAmount = fee.FeeAmount
+            FeeAmount = fee.FeeAmount,
+            Description = fee.description
         });
     }
 

@@ -9,7 +9,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a78f981d-86b9-4174-b41a-8d9f86db29a1" name="Changes" comment="" />
+    <list default="true" id="a78f981d-86b9-4174-b41a-8d9f86db29a1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Models/EmptyModels.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Elderly_Care_Support_V1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Elderly_Care_Support_V1/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Contexts/ElderlyCareSupportContext.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Controllers/ElderlyCareSupportHomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Controllers/ElderlyCareSupportHomeController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Controllers/ElderlyUserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Controllers/ElderlyUserController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/DTOs/FeeConfigurationDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/DTOs/FeeConfigurationDTO.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/ElderlyCareSupport.Server.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/ElderlyCareSupport.Server.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Helpers/MappingHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Helpers/MappingHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Models/ElderCareAccount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Models/ElderCareAccount.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Models/FeeConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Models/FeeConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Models/VolunteerAccount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Models/VolunteerAccount.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/ElderlyUserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/ElderlyUserRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/FeeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/FeeRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/ForgotPasswordRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/ForgotPasswordRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/LoginRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/LoginRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/RegistrationRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/RegistrationRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/VolunteerUserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/VolunteerUserRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Services/Implementations/FeeService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Services/Implementations/FeeService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Services/Implementations/VolunteerUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Services/Implementations/VolunteerUserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Elderly_Care_Support_V1.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Elderly_Care_Support_V1.sln" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -56,11 +79,15 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Users/guhan/RiderProjects/Elderly_Care_Support_V1/ElderlyCareSupport.Server/Controllers/ElderlyCareSupportHomeController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/fb367341658aaedd7de424d4c9189db33c4387e268dcc4011918569442ab12/AsyncTaskMethodBuilderT.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="Toolset" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
@@ -71,21 +98,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.ElderlyCareSupport.Server: IIS Express.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "enhance/api-restructure",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.ElderlyCareSupport.Server: IIS Express.executor&quot;: &quot;Debug&quot;,
+    &quot;ATTACH_DIALOG_SELECTED_CONTAINER&quot;: &quot;crazy_northcutt&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;enhance/api-restructure&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;RiderNuGetOptionsPageId&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.ElderlyCareSupport.Server: IIS Express">
     <configuration name="ElderlyCareSupport.Server: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/ElderlyCareSupport.Server/ElderlyCareSupport.Server.csproj" />
@@ -146,6 +175,8 @@
       <workItem from="1735628217010" duration="1356000" />
       <workItem from="1735642741178" duration="2711000" />
       <workItem from="1735646898805" duration="311000" />
+      <workItem from="1735744921531" duration="555000" />
+      <workItem from="1735791645317" duration="11188000" />
     </task>
     <task id="LOCAL-00001" summary="Errors - Messages - enhancements">
       <option name="closed" value="true" />

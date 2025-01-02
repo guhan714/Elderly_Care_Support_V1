@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Dapper;
-using ElderlyCareSupport.Server.Contexts;
 using ElderlyCareSupport.Server.DTOs;
 using ElderlyCareSupport.Server.Helpers;
 using ElderlyCareSupport.Server.Repositories.Interfaces;
 using System.Data;
+using ElderlyCareSupport.Server.Contexts;
 
 namespace ElderlyCareSupport.Server.Repositories.Implementations
 {
@@ -31,7 +31,7 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
                 var result = await
                     _dbConnection.QueryAsync<dynamic>("""
                                SELECT
-                               FEE_ID AS FeeId, FEE_NAME AS FeeName, FEE_AMOUNT AS FeeAmount
+                               FEE_ID AS FeeId, FEE_NAME AS FeeName, FEE_AMOUNT AS FeeAmount, Description as description
                                FROM dbo.FEE_CONFIGURATION;
                             """);
                 return DomainToDtoMapper.ToFeeConfigurationDto(result);

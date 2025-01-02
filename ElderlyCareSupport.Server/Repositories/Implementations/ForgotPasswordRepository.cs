@@ -1,7 +1,8 @@
 ﻿using Dapper;
-using ElderlyCareSupport.Server.Contexts;
 using ElderlyCareSupport.Server.Repositories.Interfaces;
 using System.Data;
+using ElderlyCareSupport.Server.Contexts;
+using ElderlyCareSupport.Server.Models;
 
 namespace ElderlyCareSupport.Server.Repositories.Implementations
 {
@@ -14,8 +15,8 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
         public ForgotPasswordRepository(ElderlyCareSupportContext elderlyCareSupportContext,
             ILogger<ForgotPasswordRepository> logger, IDbConnection dbConnection)
         {
-            this._elderlyCareSupportContext = elderlyCareSupportContext;
-            this._logger = logger;
+            _elderlyCareSupportContext = elderlyCareSupportContext;
+            _logger = logger;
             _dbConnection = dbConnection;
         }
 

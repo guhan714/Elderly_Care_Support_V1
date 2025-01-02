@@ -1,9 +1,10 @@
 ﻿using Dapper;
-using ElderlyCareSupport.Server.Contexts;
 using ElderlyCareSupport.Server.Helpers;
 using ElderlyCareSupport.Server.Repositories.Interfaces;
 using ElderlyCareSupport.Server.ViewModels;
 using System.Data;
+using ElderlyCareSupport.Server.Contexts;
+using ElderlyCareSupport.Server.Models;
 
 namespace ElderlyCareSupport.Server.Repositories.Implementations
 {

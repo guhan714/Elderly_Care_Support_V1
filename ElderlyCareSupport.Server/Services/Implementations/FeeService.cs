@@ -11,8 +11,8 @@ namespace ElderlyCareSupport.Server.Services.Implementations
 
         public FeeService(ILogger<FeeService> logger, IFeeRepository feeRepository)
         {
-            this._logger = logger;
-            this._feeRepository = feeRepository;
+            _logger = logger;
+            _feeRepository = feeRepository;
         }
 
         public async Task<IEnumerable<FeeConfigurationDto>> GetAllFeeDetails()

@@ -1,6 +1,5 @@
 using Delta;
 using ElderlyCareSupport.Server.Common;
-using ElderlyCareSupport.Server.Contexts;
 using ElderlyCareSupport.Server.DTOs;
 using ElderlyCareSupport.Server.Helpers;
 using ElderlyCareSupport.Server.Repositories.Implementations;
@@ -15,6 +14,8 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Data;
 using System.Text;
+using ElderlyCareSupport.Server.Contexts;
+using ElderlyCareSupport.Server.Models;
 using Microsoft.Extensions.Configuration.UserSecrets;
 
 var builder = WebApplication.CreateBuilder(args);
