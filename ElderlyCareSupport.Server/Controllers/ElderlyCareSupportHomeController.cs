@@ -38,22 +38,21 @@ namespace ElderlyCareSupport.Server.Controllers
         public async Task<IActionResult> GetFeeDetails()
         {
             var feeConfigurationDto = await _feeService.GetAllFeeDetails();
-            feeConfigurationDto = feeConfigurationDto.ToArray();
-            if (feeConfigurationDto.Any())
+            if (feeConfigurationDto.Count != 0)
             {
                 _logger.LogInformation(
-                    $"Data Successfully fetched from the server...\nClass: {nameof(ElderlyCareSupportAccountController)} Method: {nameof(GetFeeDetails)}");
-                return Ok(_aPiResponseFactoryService.CreateResponse(success: true,
-                    statusMessage: CommonConstants.StatusMessageOk, code: HttpStatusCode.OK,
-                    data: feeConfigurationDto));
+                    $"Data Couldn't be fetched from the server...\nClass: {nameof(ElderlyCareSupportAccountController)} Method: {nameof(GetFeeDetails)}");
+                return Ok(_aPiResponseFactoryService.CreateResponse(success: false,
+                    statusMessage: CommonConstants.StatusMessageNotFound, data: feeConfigurationDto,
+                    code: HttpStatusCode.NotFound,
+                    errorMessage: string.Format(CommonConstants.NotFound, "Fee Details")));
             }
 
             _logger.LogInformation(
-                $"Data Couldn't be fetched from the server...\nClass: {nameof(ElderlyCareSupportAccountController)} Method: {nameof(GetFeeDetails)}");
-            return Ok(_aPiResponseFactoryService.CreateResponse(success: false,
-                statusMessage: CommonConstants.StatusMessageNotFound, data: feeConfigurationDto,
-                code: HttpStatusCode.NotFound,
-                errorMessage: string.Format(CommonConstants.NotFound, "Fee Details")));
+                $"Data Successfully fetched from the server...\nClass: {nameof(ElderlyCareSupportAccountController)} Method: {nameof(GetFeeDetails)}");
+            return Ok(_aPiResponseFactoryService.CreateResponse(success: true,
+                statusMessage: CommonConstants.StatusMessageOk, code: HttpStatusCode.OK,
+                data: feeConfigurationDto));
         }
 
         [AllowAnonymous]
@@ -63,20 +62,19 @@ namespace ElderlyCareSupport.Server.Controllers
             if (!ModelState.IsValid)
             {
                 var errorMessage = _modelValidatorService.ValidateModelState(ModelState);
-                return Ok(errorMessage);
+                return BadRequest(errorMessage);
             }
 
             var result = await _loginService.AuthenticateLogin(loginViewModel);
 
-            if (result?.Item2 is false)
+            if (result.Item2 is false)
                 return Unauthorized(_aPiResponseFactoryService.CreateResponse(data: result,
-                    success: result!.Item2,
-
+                    success: result.Item2,
                     statusMessage: CommonConstants.StatusMessageNotFound,
                     code: HttpStatusCode.Unauthorized,
                     errorMessage: "User Not Found"));
 
-            if (string.IsNullOrEmpty(result.Item1?.AccessToken) && result.Item2 is true)
+            if (string.IsNullOrEmpty(result.Item1?.AccessToken) && result.Item2)
             {
                 return Ok(_aPiResponseFactoryService.CreateResponse(data: result, success: false,
                     statusMessage: CommonConstants.StatusMessageNotFound,
@@ -96,25 +94,27 @@ namespace ElderlyCareSupport.Server.Controllers
             if (!ModelState.IsValid)
             {
                 var errorMessage = _modelValidatorService.ValidateModelState(ModelState);
-                return Ok(errorMessage);
+                return BadRequest(errorMessage);
             }
 
-            var result = _registrationService.CheckUserExistingAlready(registerViewModel.Email);
-            if (result.Result)
+            var result = await _registrationService.CheckUserExistingAlready(registerViewModel.Email);
+            if (result)
             {
-                return Ok(_aPiResponseFactoryService.CreateResponse(data: Array.Empty<string>(), success: false,
+                return Conflict(_aPiResponseFactoryService.CreateResponse(data: Array.Empty<string>(), success: false,
                     statusMessage: CommonConstants.UserAlreadyExisted,
-                    code: HttpStatusCode.OK,
+                    code: HttpStatusCode.Conflict,
                     error: [new Error { ErrorName = CommonConstants.UserAlreadyExisted }]));
             }
 
             var registrationStatus = await _registrationService.RegisterUserAsync(registerViewModel);
 
-            return Ok(registrationStatus
-                ? _aPiResponseFactoryService.CreateResponse(data: Array.Empty<string>(), success: true,
+            return registrationStatus
+                ? Created(string.Empty, _aPiResponseFactoryService.CreateResponse(data: Array.Empty<string>(),
+                    success: true,
                     code: HttpStatusCode.Created,
-                    statusMessage: CommonConstants.StatusMessageOk)
-                : _aPiResponseFactoryService.CreateResponse(data: registrationStatus.ToString(), success: false,
+                    statusMessage: CommonConstants.StatusMessageOk))
+                : StatusCode((int)HttpStatusCode.InternalServerError, _aPiResponseFactoryService.CreateResponse(
+                    data: registrationStatus.ToString(), success: false,
                     statusMessage: string.Format(CommonConstants.OperationFailedErrorMessage, nameof(RegisterUser)),
                     code: HttpStatusCode.InternalServerError
                 ));
@@ -133,13 +133,13 @@ namespace ElderlyCareSupport.Server.Controllers
             var result = await _forgotPasswordServicesWordService.GetForgotPassword(emailId);
             return Ok(string.IsNullOrEmpty(result)
                 ? _aPiResponseFactoryService.CreateResponse(data: result, success: false,
-                    code:HttpStatusCode.NotFound,
+                    code: HttpStatusCode.NotFound,
                     statusMessage: CommonConstants.StatusMessageNotFound, error:
                     [
                         new Error(errorName: string.Format(CommonConstants.NotFound, nameof(User)))
                     ])
                 : _aPiResponseFactoryService.CreateResponse(data: result, success: true,
-                    code:HttpStatusCode.OK,
+                    code: HttpStatusCode.OK,
                     statusMessage: CommonConstants.StatusMessageOk));
         }
     }

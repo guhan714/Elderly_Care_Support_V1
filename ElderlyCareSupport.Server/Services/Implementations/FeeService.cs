@@ -1,6 +1,7 @@
 ﻿using ElderlyCareSupport.Server.DTOs;
 using ElderlyCareSupport.Server.Repositories.Interfaces;
 using ElderlyCareSupport.Server.Services.Interfaces;
+using MethodTimer;
 
 namespace ElderlyCareSupport.Server.Services.Implementations
 {
@@ -15,19 +16,17 @@ namespace ElderlyCareSupport.Server.Services.Implementations
             _feeRepository = feeRepository;
         }
 
-        public async Task<IEnumerable<FeeConfigurationDto>> GetAllFeeDetails()
+        public async Task<List<FeeConfigurationDto>> GetAllFeeDetails()
         {
             try
             {
                 var feeDetails = await _feeRepository.GetAllFeeDetailsAsync();
-                feeDetails = feeDetails.ToArray();
-                if (feeDetails.Any())
+                if (!feeDetails.Any())
                 {
-                    _logger.LogInformation($"Started Fetching Fee Details from {nameof(FeeService)}\nAt Method: {nameof(GetAllFeeDetails)}");
-                    return feeDetails;
+                    _logger.LogWarning("Can't Fetch Fee Details from {ServiceName}\nAt Method: {MethodName}", nameof(FeeService), nameof(GetAllFeeDetails));
                 }
-                _logger.LogWarning("Can't Fetch Fee Details from {ServiceName}\nAt Method: {MethodName}", nameof(FeeService), nameof(GetAllFeeDetails));
-                return feeDetails;
+                _logger.LogInformation($"Started Fetching Fee Details from {nameof(FeeService)}\nAt Method: {nameof(GetAllFeeDetails)}");
+                return feeDetails.ToList();
             }
             catch (Exception ex)
             {

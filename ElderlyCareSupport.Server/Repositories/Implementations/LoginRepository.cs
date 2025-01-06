@@ -5,28 +5,29 @@ using ElderlyCareSupport.Server.ViewModels;
 using System.Data;
 using ElderlyCareSupport.Server.Contexts;
 using ElderlyCareSupport.Server.Models;
+using ElderlyCareSupport.Server.Services.Interfaces;
+using MethodTimer;
 
 namespace ElderlyCareSupport.Server.Repositories.Implementations
 {
     public class LoginRepository : ILoginRepository
     {
-        private readonly ElderlyCareSupportContext _elderlyCareSupport;
-        private readonly IDbConnection _dbConnection;
+        private readonly IDbConnectionFactory _dbConnection;
         private readonly ILogger<LoginRepository> _logger;
 
-        public LoginRepository(ElderlyCareSupportContext elderlyCareSupport, ILogger<LoginRepository> logger,
-            IDbConnection dbConnection)
+        public LoginRepository( ILogger<LoginRepository> logger,
+            IDbConnectionFactory dbConnection)
         {
-            _elderlyCareSupport = elderlyCareSupport;
             _logger = logger;
             _dbConnection = dbConnection;
         }
 
-
+        [Time]
         public async Task<bool> AuthenticateLogin(LoginViewModel loginViewModel)
         {
+            using var connection = _dbConnection.GetConnection();
             var enumerableHashedPassword = await
-                _dbConnection.QueryAsync<string>("""
+                connection.QueryAsync<string>("""
                                                     SELECT PASSWORD 
                                                     FROM ElderCareAccount 
                                                     WHERE Email = @Email AND UserType = @UserType 
