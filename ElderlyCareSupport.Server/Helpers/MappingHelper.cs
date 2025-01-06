@@ -5,14 +5,14 @@ namespace ElderlyCareSupport.Server.Helpers;
 
 public static class DomainToDtoMapper
 {
-    public static IEnumerable<FeeConfigurationDto> ToFeeConfigurationDto(IEnumerable<dynamic> feeConfiguration)
+    public static IEnumerable<FeeConfigurationDto> ToFeeConfigurationDto(IEnumerable<FeeConfiguration> feeConfiguration)
     {
         return feeConfiguration.Select(fee => new FeeConfigurationDto
         {
             FeeId = fee.FeeId,
             FeeName = fee.FeeName,
             FeeAmount = fee.FeeAmount,
-            Description = fee.description
+            Description = fee.Description
         });
     }
 

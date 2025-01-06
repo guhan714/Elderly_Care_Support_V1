@@ -3,19 +3,18 @@ using ElderlyCareSupport.Server.Repositories.Interfaces;
 using System.Data;
 using ElderlyCareSupport.Server.Contexts;
 using ElderlyCareSupport.Server.Models;
+using ElderlyCareSupport.Server.Services.Interfaces;
 
 namespace ElderlyCareSupport.Server.Repositories.Implementations
 {
     public class ForgotPasswordRepository : IForgotPasswordRepository
     {
-        private readonly ElderlyCareSupportContext _elderlyCareSupportContext;
         private readonly ILogger<ForgotPasswordRepository> _logger;
-        private readonly IDbConnection _dbConnection;
+        private readonly IDbConnectionFactory _dbConnection;
 
-        public ForgotPasswordRepository(ElderlyCareSupportContext elderlyCareSupportContext,
-            ILogger<ForgotPasswordRepository> logger, IDbConnection dbConnection)
+        public ForgotPasswordRepository( 
+            ILogger<ForgotPasswordRepository> logger, IDbConnectionFactory dbConnection)
         {
-            _elderlyCareSupportContext = elderlyCareSupportContext;
             _logger = logger;
             _dbConnection = dbConnection;
         }
@@ -24,7 +23,8 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
         {
             try
             {
-                var password = await _dbConnection.QueryFirstOrDefaultAsync<string>("""
+                using var connection = _dbConnection.GetConnection();
+                var password = await connection.QueryFirstOrDefaultAsync<string>("""
                     SELECT Password FROM ElderCareAccount WHERE Email = @userName
                     """, new { userName });
                 return password ?? string.Empty;

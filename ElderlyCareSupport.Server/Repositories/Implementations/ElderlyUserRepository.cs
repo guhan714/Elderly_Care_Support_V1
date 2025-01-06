@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Dapper;
-
 using ElderlyCareSupport.Server.Controllers;
 using ElderlyCareSupport.Server.DTOs;
 using ElderlyCareSupport.Server.Helpers;
@@ -10,31 +9,33 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using ElderlyCareSupport.Server.Contexts;
+using ElderlyCareSupport.Server.Services.Interfaces;
 using InterpolatedSql.Dapper;
+using MethodTimer;
 
 namespace ElderlyCareSupport.Server.Repositories.Implementations
 {
     public class ElderlyUserRepository<T> : IUserRepository<T> where T : ElderUserDto, new()
     {
-        private readonly ElderlyCareSupportContext _careSupportContext;
-        private readonly IDbConnection _dbConnection;
+        private readonly IDbConnectionFactory _dbConnection;
         private readonly ILogger<ElderlyUserRepository<T>> _logger;
         private readonly IMapper _mapper;
 
-        public ElderlyUserRepository(ElderlyCareSupportContext careSupportContext,
-            ILogger<ElderlyUserRepository<T>> logger, IMapper mapper, IDbConnection dbConnection)
+        public ElderlyUserRepository(
+            ILogger<ElderlyUserRepository<T>> logger, IMapper mapper, IDbConnectionFactory dbConnection)
         {
-            _careSupportContext = careSupportContext;
             _logger = logger;
             _mapper = mapper;
             _dbConnection = dbConnection;
         }
 
+        [Time]
         public async Task<T?> GetUserDetailsAsync(string emailId)
         {
             try
             {
-                var query = _dbConnection.SqlBuilder($"SELECT TOP 1 * FROM ElderCareAccount WHERE Email = {emailId};");
+                using var connection = _dbConnection.GetConnection();
+                var query = connection.SqlBuilder($"SELECT TOP 1 * FROM ElderCareAccount WHERE Email = {emailId};");
                 var result = await query.QuerySingleOrDefaultAsync<ElderCareAccount?>();
                 _logger.LogInformation(
                     $"The process has been started to fetch the ElderlyUserDetails... At {nameof(ElderlyUserController)}\tMethod: {nameof(GetUserDetailsAsync)}");
@@ -44,36 +45,39 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error Occurred During {Process} and Exception: {Message}", nameof(GetUserDetailsAsync), ex.Message);
+                _logger.LogError("Error Occurred During {Process} and Exception: {Message}",
+                    nameof(GetUserDetailsAsync), ex.Message);
                 return null;
             }
         }
 
+        [Time]
         public async Task<bool> UpdateUserDetailsAsync(string emailId, T elderCareAccount)
         {
             try
             {
-                var query = _dbConnection.SqlBuilder($"""
+                using var connection = _dbConnection.GetConnection();
+                var query = connection.SqlBuilder($"""
                                                       UPDATE ElderCareAccount
                                                       SET FirstName = {elderCareAccount.FirstName} 
-                                                      AND LastName = {elderCareAccount.LastName}
-                                                      AND Gender = {elderCareAccount.Gender}
-                                                      AND Address = {elderCareAccount.Address}
-                                                      AND PhoneNumber = {elderCareAccount.PhoneNumber}
-                                                      AND City = {elderCareAccount.City}
-                                                      AND Country = {elderCareAccount.Country}
-                                                      AND Region = {elderCareAccount.Region}
-                                                      AND PostalCode = {elderCareAccount.PostalCode}
+                                                      ,LastName = {elderCareAccount.LastName}
+                                                      ,Gender = {elderCareAccount.Gender}
+                                                      ,Address = {elderCareAccount.Address}
+                                                      ,PhoneNumber = {elderCareAccount.PhoneNumber}
+                                                      ,City = {elderCareAccount.City}
+                                                      ,Country = {elderCareAccount.Country}
+                                                      ,Region = {elderCareAccount.Region}
+                                                      ,PostalCode = {elderCareAccount.PostalCode}
                                                       WHERE Email = {elderCareAccount.Email}; 
                                                       """
-                    );
+                );
                 var successfulUpdate = await query.ExecuteScalarAsync<int>();
                 return successfulUpdate >= 1;
             }
             catch (DbUpdateConcurrencyException ex)
             {
                 _logger.LogError("Error occurred during {MethodName}. Exception: {ExceptionMessage}",
-                    nameof(GetUserDetailsAsync), ex.Message);
+                    nameof(UpdateUserDetailsAsync), ex.Message);
                 return false;
             }
             catch (Exception ex)

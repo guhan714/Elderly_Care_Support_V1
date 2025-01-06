@@ -26,17 +26,17 @@ namespace ElderlyCareSupport.Server.Services.Implementations
                 var isUserAuthenticated = await _loginRepository.AuthenticateLogin(loginViewModel);
                 if (!isUserAuthenticated)
                 {
-                    return Tuple.Create(new LoginResponse{AccessToken = string.Empty,RefreshToken = string.Empty,ExpiresIn = 0}, isUserAuthenticated)!;
+                    return Tuple.Create(new LoginResponse(AccessToken :string.Empty, RefreshToken: string.Empty,ExpiresIn: 0), isUserAuthenticated)!;
                 }
 
                 var token = await _tokenService.GenerateToken();
 
-                return (string.IsNullOrEmpty(token?.AccessToken) ? Tuple.Create(new LoginResponse(){ AccessToken = string.Empty, RefreshToken = string.Empty,ExpiresIn = 0}, isUserAuthenticated) : Tuple.Create(token, isUserAuthenticated))!;
+                return (string.IsNullOrEmpty(token?.AccessToken) ? Tuple.Create(new LoginResponse( AccessToken : string.Empty, RefreshToken : string.Empty,ExpiresIn : 0), isUserAuthenticated) : Tuple.Create(token, isUserAuthenticated))!;
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Exception Occurred in the Login Authentication from {nameof(LoginService)}\nAt Method: {nameof(AuthenticateLogin)}\nException Message: {ex.Message}");
-                return Tuple.Create(new LoginResponse(), false)!;
+                return Tuple.Create(new LoginResponse(AccessToken :string.Empty, RefreshToken: string.Empty,ExpiresIn: 0), false)!;
             }
         }
     }

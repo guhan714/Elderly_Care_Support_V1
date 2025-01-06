@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElderlyCareSupport.Server", "ElderlyCareSupport.Server\ElderlyCareSupport.Server.csproj", "{894A1532-4831-4366-B415-A1390F391534}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElderlyCareSupportTesting", "ElderlyCareSupportTesting\ElderlyCareSupportTesting.csproj", "{3FFD4311-E51C-4035-A542-67A0836CCDBE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{894A1532-4831-4366-B415-A1390F391534}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{894A1532-4831-4366-B415-A1390F391534}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{894A1532-4831-4366-B415-A1390F391534}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FFD4311-E51C-4035-A542-67A0836CCDBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FFD4311-E51C-4035-A542-67A0836CCDBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FFD4311-E51C-4035-A542-67A0836CCDBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FFD4311-E51C-4035-A542-67A0836CCDBE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

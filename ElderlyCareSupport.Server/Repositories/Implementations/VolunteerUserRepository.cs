@@ -6,19 +6,18 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using ElderlyCareSupport.Server.Contexts;
 using ElderlyCareSupport.Server.Models;
+using ElderlyCareSupport.Server.Services.Interfaces;
 
 namespace ElderlyCareSupport.Server.Repositories.Implementations
 {
     public class VolunteerUserRepository<T> : IUserRepository<T> where T : VolunteerUserDto, new()
     {
-        private readonly ElderlyCareSupportContext _elderlyCareSupportContext;
         private readonly ILogger<T> _logger;
         private readonly IMapper _mapper;
-        private readonly IDbConnection _dbConnection;
+        private readonly IDbConnectionFactory _dbConnection;
 
-        public VolunteerUserRepository(ElderlyCareSupportContext elderlyCareSupportContext, ILogger<T> logger, IMapper mapper, IDbConnection dbConnection)
+        public VolunteerUserRepository(ILogger<T> logger, IMapper mapper, IDbConnectionFactory dbConnection)
         {
-            _elderlyCareSupportContext = elderlyCareSupportContext;
             _logger = logger;
             _mapper = mapper;
             _dbConnection = dbConnection;
@@ -33,7 +32,10 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
         {
             try
             {
-                var userDetails = await _elderlyCareSupportContext.VolunteerAccounts.FirstOrDefaultAsync(user => user.Email == emailId);
+                using var connection = _dbConnection.GetConnection();
+                var userDetails =
+                    await connection.QueryFirstOrDefaultAsync("SELECT * FROM ElderCareAccount WHERE Email = @emailId",
+                        new { emailId });
                 return _mapper.Map<T>(userDetails);
             }
             catch (Exception)
@@ -46,20 +48,21 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
         {
             try
             {
+                using var connection = _dbConnection.GetConnection();
                 var changesAsync = await
-                    _dbConnection.ExecuteAsync("""
-                                                UPDATE ElderCareAccount
-                                                SET FirstName = @FirstName 
-                                                AND LastName = @LastName 
-                                                AND Gender = @Gender
-                                                AND Address = @Address
-                                                AND PhoneNumber = @PhoneNumber
-                                                AND City = @City
-                                                AND Country = @Country
-                                                AND Region = @Region
-                                                AND PostalCode = @PostalCode
-                                                WHERE Email = @Email
-                                               """, volunteerUserDto);
+                    connection.ExecuteAsync("""
+                                             UPDATE ElderCareAccount
+                                             SET FirstName = @FirstName 
+                                             AND LastName = @LastName 
+                                             AND Gender = @Gender
+                                             AND Address = @Address
+                                             AND PhoneNumber = @PhoneNumber
+                                             AND City = @City
+                                             AND Country = @Country
+                                             AND Region = @Region
+                                             AND PostalCode = @PostalCode
+                                             WHERE Email = @Email
+                                            """, volunteerUserDto);
                 return changesAsync > 0;
             }
             catch (DbUpdateConcurrencyException exception)

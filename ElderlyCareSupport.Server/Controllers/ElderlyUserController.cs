@@ -30,8 +30,8 @@ namespace ElderlyCareSupport.Server.Controllers
         {
             var elderlyUser = await _elderlyUserProfileService.GetUserDetails(emailId);
             return elderlyUser is null
-                ? Ok(_aPiResponseFactoryService.CreateResponse(success: false,
-                    code: HttpStatusCode.NoContent,
+                ? NotFound(_aPiResponseFactoryService.CreateResponse(success: false,
+                    code: HttpStatusCode.NotFound,
                     statusMessage: CommonConstants.StatusMessageNotFound, data: elderlyUser,
                     errorMessage: string.Format(CommonConstants.NotFound, "user")))
                 : Ok(_aPiResponseFactoryService.CreateResponse(success: true,
@@ -51,7 +51,7 @@ namespace ElderlyCareSupport.Server.Controllers
             var updateResult = await _elderlyUserProfileService.UpdateUserDetails(emailId, elderCareAccount);
 
             return Ok(_aPiResponseFactoryService.CreateResponse(success: updateResult,
-                code: HttpStatusCode.Created,
+                code: updateResult ? HttpStatusCode.Created : HttpStatusCode.InternalServerError,
                 statusMessage: CommonConstants.StatusMessageOk, data: new List<string>()));
         }
 

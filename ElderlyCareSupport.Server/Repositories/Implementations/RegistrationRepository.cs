@@ -5,20 +5,19 @@ using ElderlyCareSupport.Server.Repositories.Interfaces;
 using ElderlyCareSupport.Server.ViewModels;
 using System.Data;
 using ElderlyCareSupport.Server.Contexts;
+using ElderlyCareSupport.Server.Services.Interfaces;
 
 namespace ElderlyCareSupport.Server.Repositories.Implementations
 {
     public class RegistrationRepository : IRegistrationRepository
     {
-        private readonly ElderlyCareSupportContext _elderlyCareSupportContext;
-        private readonly IDbConnection _dbConnection;
+        private readonly IDbConnectionFactory _dbConnection;
         private readonly ILogger<RegistrationRepository> _logger;
         private readonly IMapper _mapper;
 
-        public RegistrationRepository(ElderlyCareSupportContext elderlyCareSupportContext,
-            ILogger<RegistrationRepository> logger, IMapper mapper, IDbConnection dbConnection)
+        public RegistrationRepository(
+            ILogger<RegistrationRepository> logger, IMapper mapper, IDbConnectionFactory dbConnection)
         {
-            _elderlyCareSupportContext = elderlyCareSupportContext;
             _logger = logger;
             _mapper = mapper;
             _dbConnection = dbConnection;
@@ -28,11 +27,12 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
         {
             try
             {
+                using var connection = _dbConnection.GetConnection();
                 var registerModel = _mapper.Map<ElderCareAccount>(registrationViewModel);
 
                 _logger.LogInformation(
                     $"Registration has been started at Class: {nameof(RegistrationRepository)} --> Method: {nameof(RegisterUser)}");
-                var changes = await _dbConnection.ExecuteAsync(@"
+                var changes = await connection.ExecuteAsync(@"
                                 INSERT INTO ElderCareAccount (
                                     FirstName, LastName, Email, Password, ConfirmPassword, PhoneNumber, Gender, Address, City, Region, PostalCode, Country, UserType, IsActive
                                 )
@@ -66,7 +66,8 @@ namespace ElderlyCareSupport.Server.Repositories.Implementations
         {
             try
             {
-                var isExistingUser = await _dbConnection.QuerySingleOrDefaultAsync<ElderCareAccount>("""
+                using var connection = _dbConnection.GetConnection();
+                var isExistingUser = await connection.QuerySingleOrDefaultAsync<ElderCareAccount>("""
                     SELECT COUNT(*) FROM ElderCareAccount WHERE Email = @email;
                     """, new { email });
                 return isExistingUser is null;

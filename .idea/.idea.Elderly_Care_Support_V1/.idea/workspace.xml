@@ -10,17 +10,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a78f981d-86b9-4174-b41a-8d9f86db29a1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Models/EmptyModels.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.Elderly_Care_Support_V1/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Contexts/ElderlyCareSupportContext.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/FodyWeavers.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Services/Implementations/DbConnectionFactory.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Services/Interfaces/IDbConnectionFactory.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ElderlyCareSupportTesting/ElderlyCareSupportTesting.csproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ElderlyCareSupportTesting/MockingHomeController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Elderly_Care_Support_V1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Elderly_Care_Support_V1/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Contexts/ElderlyCareSupportContext.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Common/APIResponseFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Common/APIResponseFactory.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Controllers/ElderlyCareSupportHomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Controllers/ElderlyCareSupportHomeController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Controllers/ElderlyUserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Controllers/ElderlyUserController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/DTOs/FeeConfigurationDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/DTOs/FeeConfigurationDTO.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/ElderlyCareSupport.Server.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/ElderlyCareSupport.Server.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Helpers/MappingHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Helpers/MappingHelper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Models/ElderCareAccount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Models/ElderCareAccount.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Models/FeeConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Models/FeeConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Models/VolunteerAccount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Models/VolunteerAccount.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/ElderlyUserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/ElderlyUserRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/FeeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/FeeRepository.cs" afterDir="false" />
@@ -28,9 +30,11 @@
       <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/LoginRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/LoginRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/RegistrationRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/RegistrationRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/VolunteerUserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Repositories/Implementations/VolunteerUserRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/ResponseModels/LoginResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/ResponseModels/LoginResponse.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Services/Implementations/FeeService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Services/Implementations/FeeService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Services/Implementations/VolunteerUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Services/Implementations/VolunteerUserService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Services/Implementations/IEmailService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Services/Implementations/LoginService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Services/Implementations/LoginService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElderlyCareSupport.Server/Services/Interfaces/IFeeService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ElderlyCareSupport.Server/Services/Interfaces/IFeeService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Elderly_Care_Support_V1.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Elderly_Care_Support_V1.sln" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -79,7 +83,11 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/990ebf52fc408ca45929fd176d2740675a67fab8/src/libraries/Microsoft.Extensions.DependencyInjection/src/ServiceProvider.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7bd7b7d9cd6e4c8688ada5eb58e57eeb2ba938/d9/baa6ef7d/IDbConnection.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/251361482a1fa2bee4c1279ae3327ec461c81eac80b589209b48dc04f9b/LoginRequest.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/fb367341658aaedd7de424d4c9189db33c4387e268dcc4011918569442ab12/AsyncTaskMethodBuilderT.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/guhan/RiderProjects/Elderly_Care_Support_V1/ElderlyCareSupport.Server/Program.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
@@ -87,7 +95,7 @@
 }</component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="Toolset" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
@@ -104,6 +112,7 @@
     &quot;ATTACH_DIALOG_SELECTED_CONTAINER&quot;: &quot;crazy_northcutt&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;f6a96cc0-5358-44c4-9431-184c90e9d6e9.executor&quot;: &quot;Debug&quot;,
     &quot;git-widget-placeholder&quot;: &quot;enhance/api-restructure&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -111,7 +120,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;RiderNuGetOptionsPageId&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -176,7 +185,14 @@
       <workItem from="1735642741178" duration="2711000" />
       <workItem from="1735646898805" duration="311000" />
       <workItem from="1735744921531" duration="555000" />
-      <workItem from="1735791645317" duration="11188000" />
+      <workItem from="1735791645317" duration="12499000" />
+      <workItem from="1735825739140" duration="7956000" />
+      <workItem from="1735873468425" duration="11457000" />
+      <workItem from="1735984550566" duration="1589000" />
+      <workItem from="1735992063764" duration="698000" />
+      <workItem from="1735992836006" duration="61000" />
+      <workItem from="1735992990910" duration="6165000" />
+      <workItem from="1736151159442" duration="2396000" />
     </task>
     <task id="LOCAL-00001" summary="Errors - Messages - enhancements">
       <option name="closed" value="true" />
@@ -186,7 +202,15 @@
       <option name="project" value="LOCAL" />
       <updated>1735642948233</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="DB Model restructuring">
+      <option name="closed" value="true" />
+      <created>1735813164051</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1735813164052</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -208,6 +232,12 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Errors - Messages - enhancements" />
-    <option name="LAST_COMMIT_MESSAGE" value="Errors - Messages - enhancements" />
+    <MESSAGE value="DB Model restructuring" />
+    <MESSAGE value="Delete ElderlyCareSupport.ServerTests directory" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
