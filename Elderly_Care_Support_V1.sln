@@ -3,9 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElderlyCareSupport.Server", "ElderlyCareSupport.Server\ElderlyCareSupport.Server.csproj", "{894A1532-4831-4366-B415-A1390F391534}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElderlyCareSupport.WebApi", "ElderlyCareSupport.WebApi\ElderlyCareSupport.WebApi.csproj", "{894A1532-4831-4366-B415-A1390F391534}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElderlyCareSupportTesting", "ElderlyCareSupportTesting\ElderlyCareSupportTesting.csproj", "{3FFD4311-E51C-4035-A542-67A0836CCDBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElderlyCareSupport.Domain", "ElderlyCareSupport.Domain\ElderlyCareSupport.Domain.csproj", "{69CC2D30-4697-4E2F-AEA7-DC35296B7244}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElderlyCareSupport.Application", "ElderlyCareSupport.Application\ElderlyCareSupport.Application.csproj", "{E7D34ED0-0D0F-4477-ADFB-158E1405E430}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElderlyCareSupport.Infrastructure", "ElderlyCareSupport.Infrastructure\ElderlyCareSupport.Infrastructure.csproj", "{715BCC39-FD01-4C82-98EA-A55D16661755}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{2086A49E-9C5D-4761-A0F9-3B964ABDF260}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElderlyCareSupport.Presentation", "ElderlyCareSupport.Presentation\ElderlyCareSupport.Presentation.csproj", "{1E20CFD5-0EB7-4C78-B069-EDB76E9226F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,11 +31,34 @@ Global
 		{3FFD4311-E51C-4035-A542-67A0836CCDBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FFD4311-E51C-4035-A542-67A0836CCDBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FFD4311-E51C-4035-A542-67A0836CCDBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69CC2D30-4697-4E2F-AEA7-DC35296B7244}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69CC2D30-4697-4E2F-AEA7-DC35296B7244}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69CC2D30-4697-4E2F-AEA7-DC35296B7244}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69CC2D30-4697-4E2F-AEA7-DC35296B7244}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7D34ED0-0D0F-4477-ADFB-158E1405E430}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7D34ED0-0D0F-4477-ADFB-158E1405E430}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7D34ED0-0D0F-4477-ADFB-158E1405E430}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7D34ED0-0D0F-4477-ADFB-158E1405E430}.Release|Any CPU.Build.0 = Release|Any CPU
+		{715BCC39-FD01-4C82-98EA-A55D16661755}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{715BCC39-FD01-4C82-98EA-A55D16661755}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{715BCC39-FD01-4C82-98EA-A55D16661755}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{715BCC39-FD01-4C82-98EA-A55D16661755}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E20CFD5-0EB7-4C78-B069-EDB76E9226F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E20CFD5-0EB7-4C78-B069-EDB76E9226F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E20CFD5-0EB7-4C78-B069-EDB76E9226F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E20CFD5-0EB7-4C78-B069-EDB76E9226F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9EC55B44-97CB-4827-A84D-C4804712C173}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E7D34ED0-0D0F-4477-ADFB-158E1405E430} = {2086A49E-9C5D-4761-A0F9-3B964ABDF260}
+		{69CC2D30-4697-4E2F-AEA7-DC35296B7244} = {2086A49E-9C5D-4761-A0F9-3B964ABDF260}
+		{715BCC39-FD01-4C82-98EA-A55D16661755} = {2086A49E-9C5D-4761-A0F9-3B964ABDF260}
+		{894A1532-4831-4366-B415-A1390F391534} = {2086A49E-9C5D-4761-A0F9-3B964ABDF260}
+		{1E20CFD5-0EB7-4C78-B069-EDB76E9226F7} = {2086A49E-9C5D-4761-A0F9-3B964ABDF260}
 	EndGlobalSection
 EndGlobal

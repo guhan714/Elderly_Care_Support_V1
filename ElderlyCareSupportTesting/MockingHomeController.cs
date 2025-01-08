@@ -1,14 +1,17 @@
 using System.Net;
 using Azure.Identity;
 using ElderlyCareSupport.Server.Common;
-using ElderlyCareSupport.Server.Models.Enums;
-using ElderlyCareSupport.Server.ResponseModels;
+using ElderlyCareSupport.Server.Contracts;
+using ElderlyCareSupport.Server.Contracts.Common;
+using ElderlyCareSupport.Server.Contracts.Login;
+using ElderlyCareSupport.Server.Enums;
 using ElderlyCareSupport.Server.Services.Interfaces;
 using ElderlyCareSupport.Server.ViewModels;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using LoginRequest = ElderlyCareSupport.Server.Contracts.Login.LoginRequest;
 
 namespace ElderlyCareSupportTesting;
 using ElderlyCareSupport.Server.DTOs;
@@ -143,7 +146,7 @@ public class MockHomeController
     [InlineData("user@sample.com", "stringst", UsersType.ElderlyUser)]
     private async Task AuthenticateUser_ShouldReturnUnauthorized_WhenUserIsNotAuthenticated(string userEmail, string password, UsersType userType)
     {
-        var loginRequest = new LoginViewModel
+        var loginRequest = new LoginRequest
         {
             Email = userEmail,
             Password = password,
