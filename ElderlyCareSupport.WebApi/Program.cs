@@ -1,21 +1,23 @@
-using ElderlyCareSupport.Server.Common;
-using ElderlyCareSupport.Server.DTOs;
-using ElderlyCareSupport.Server.Helpers;
-using ElderlyCareSupport.Server.Repositories.Implementations;
-using ElderlyCareSupport.Server.Repositories.Interfaces;
-using ElderlyCareSupport.Server.Services.Implementations;
-using ElderlyCareSupport.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using System.Data;
 using System.Text;
 using ElderlyCareSupport.Application;
+using ElderlyCareSupport.Application.Common;
+using ElderlyCareSupport.Application.Contracts;
+using ElderlyCareSupport.Application.Contracts.Login;
+using ElderlyCareSupport.Application.DTOs;
+using ElderlyCareSupport.Application.Helpers;
+using ElderlyCareSupport.Application.IRepository;
+using ElderlyCareSupport.Application.IService;
+using ElderlyCareSupport.Application.Service;
+using ElderlyCareSupport.Application.Validation.AuthenticationValidators;
+using ElderlyCareSupport.Application.Validation.UserServiceValidator;
+using ElderlyCareSupport.Domain.Models;
 using ElderlyCareSupport.Infrastructure;
-using ElderlyCareSupport.Presentation;
-using ElderlyCareSupport.Server.Contexts;
-using ElderlyCareSupport.Server.Models;
+using ElderlyCareSupport.Infrastructure.Repository;
+using FluentValidation;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +26,11 @@ var jwtSettings = builder.Configuration.GetSection("JWT");
 builder.Services.AddCors();
 
 builder.Host.UseSerilog((context, configuration) => { configuration.ReadFrom.Configuration(context.Configuration); });
+builder.Services.AddValidatorsFromAssemblyContaining<UserRegistrationValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UserLoginValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<ForgotPasswordValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateUserDetailsValidator>();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -31,9 +38,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddApplication()
-    .AddInfrastructure()
-    .AddPresentation();
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
 builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>(db =>
     new DbConnectionFactory(builder.Configuration.GetConnectionString("ElderDB")!));
@@ -44,7 +49,6 @@ builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>(db =>
 // });
 
 builder.Services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
-builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
