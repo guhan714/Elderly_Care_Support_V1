@@ -7,7 +7,17 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="InterpolatedSql.Dapper" Version="2.3.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0-rc.2.24473.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ElderlyCareSupport.Application\ElderlyCareSupport.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Contexts\" />
+      <Folder Include="Utilities\Email\" />
     </ItemGroup>
 
 </Project>

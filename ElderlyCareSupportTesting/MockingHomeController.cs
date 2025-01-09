@@ -1,20 +1,22 @@
 using System.Net;
 using Azure.Identity;
-using ElderlyCareSupport.Server.Common;
-using ElderlyCareSupport.Server.Contracts;
-using ElderlyCareSupport.Server.Contracts.Common;
-using ElderlyCareSupport.Server.Contracts.Login;
-using ElderlyCareSupport.Server.Enums;
-using ElderlyCareSupport.Server.Services.Interfaces;
-using ElderlyCareSupport.Server.ViewModels;
+using ElderlyCareSupport.Application.Common;
+using ElderlyCareSupport.Application.Contracts;
+using ElderlyCareSupport.Application.Contracts.Common;
+using ElderlyCareSupport.Application.Contracts.Login;
+using ElderlyCareSupport.Application.DTOs;
+using ElderlyCareSupport.Application.Enums;
+using ElderlyCareSupport.Application.IService;
+using ElderlyCareSupport.Domain.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using LoginRequest = ElderlyCareSupport.Server.Contracts.Login.LoginRequest;
+using LoginRequest = ElderlyCareSupport.Application.Contracts.Login.LoginRequest;
 
 namespace ElderlyCareSupportTesting;
-using ElderlyCareSupport.Server.DTOs;
+
 using ElderlyCareSupport.Server.Controllers;
 
 public class MockHomeController
@@ -27,6 +29,9 @@ public class MockHomeController
     private readonly Mock<IForgotPaswordService> _mockForgotPasswordService;
     private readonly Mock<IApiResponseFactoryService> _mockApiResponseFactoryService;
     private readonly Mock<IModelValidatorService> _mockModelValidatorService;
+    private readonly Mock<IValidator<RegistrationRequest>> _validator;
+    private readonly Mock<IValidator<LoginRequest>> _loginValidator;
+    private readonly Mock<IValidator<string>> _emailValidator;
     
 
     public MockHomeController()
@@ -38,6 +43,9 @@ public class MockHomeController
         _mockForgotPasswordService = new Mock<IForgotPaswordService>();
         _mockApiResponseFactoryService = new Mock<IApiResponseFactoryService>();
         _mockModelValidatorService = new Mock<IModelValidatorService>();
+        _validator = new Mock<IValidator<RegistrationRequest>>();
+        _loginValidator = new Mock<IValidator<LoginRequest>>();
+        _emailValidator = new Mock<IValidator<string>>();
         
         _mockController = new ElderlyCareSupportAccountController(
             _mockFeeService.Object,
@@ -46,7 +54,10 @@ public class MockHomeController
             _mockRegistrationService.Object,
             _mockForgotPasswordService.Object,
             _mockApiResponseFactoryService.Object,
-            _mockModelValidatorService.Object
+            _mockModelValidatorService.Object,
+            _validator.Object,
+            _loginValidator.Object,
+            _emailValidator.Object
         );
     }
 

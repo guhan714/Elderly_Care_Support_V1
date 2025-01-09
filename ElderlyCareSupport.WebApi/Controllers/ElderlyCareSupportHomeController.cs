@@ -1,8 +1,10 @@
 ﻿using System.Net;
-using ElderlyCareSupport.Server.Common;
-using ElderlyCareSupport.Server.Contracts.Login;
-using ElderlyCareSupport.Server.Services.Interfaces;
-using ElderlyCareSupport.Server.ViewModels;
+using ElderlyCareSupport.Application.Common;
+using ElderlyCareSupport.Application.Contracts;
+using ElderlyCareSupport.Application.Contracts.Login;
+using ElderlyCareSupport.Application.IService;
+using ElderlyCareSupport.Application.Validation.AuthenticationValidators;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,11 +22,16 @@ namespace ElderlyCareSupport.Server.Controllers
         private readonly IForgotPaswordService _forgotPasswordServicesWordService;
         private readonly IApiResponseFactoryService _aPiResponseFactoryService;
         private readonly IModelValidatorService _modelValidatorService;
+        private readonly IValidator<RegistrationRequest> _validator;
+        private readonly IValidator<LoginRequest> _loginValidator;
+        private readonly IValidator<string> _emailValidator;
 
         public ElderlyCareSupportAccountController(IFeeService feeService,
             ILogger<ElderlyCareSupportAccountController> logger, ILoginService loginService,
             IRegistrationService registrationService, IForgotPaswordService forgotPasswordServicesWordService,
-            IApiResponseFactoryService aPiResponseFactoryService, IModelValidatorService modelValidatorService)
+            IApiResponseFactoryService aPiResponseFactoryService, IModelValidatorService modelValidatorService,
+            IValidator<RegistrationRequest> validator, IValidator<LoginRequest> loginValidator,
+            IValidator<string> emailValidator)
         {
             _feeService = feeService;
             _logger = logger;
@@ -33,6 +40,9 @@ namespace ElderlyCareSupport.Server.Controllers
             _forgotPasswordServicesWordService = forgotPasswordServicesWordService;
             _aPiResponseFactoryService = aPiResponseFactoryService;
             _modelValidatorService = modelValidatorService;
+            _validator = validator;
+            _loginValidator = loginValidator;
+            _emailValidator = emailValidator;
         }
 
         [HttpGet(nameof(GetFeeDetails))]
@@ -60,11 +70,9 @@ namespace ElderlyCareSupport.Server.Controllers
         [HttpPost(nameof(Login))]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            if (!ModelState.IsValid)
-            {
-                var errorMessage = _modelValidatorService.ValidateModelState(ModelState);
-                return BadRequest(errorMessage);
-            }
+            var validationResult = await _loginValidator.ValidateAsync(loginRequest);
+            if (!validationResult.IsValid)
+                return BadRequest(_modelValidatorService.ValidateModelState(validationResult.Errors));
 
             var result = await _loginService.AuthenticateLogin(loginRequest);
 
@@ -92,11 +100,9 @@ namespace ElderlyCareSupport.Server.Controllers
         [HttpPost(nameof(RegisterUser))]
         public async Task<IActionResult> RegisterUser([FromBody] RegistrationRequest registerRequest)
         {
-            if (!ModelState.IsValid)
-            {
-                var errorMessage = _modelValidatorService.ValidateModelState(ModelState);
-                return BadRequest(errorMessage);
-            }
+            var validationResult = await _validator.ValidateAsync(registerRequest);
+            if (!validationResult.IsValid)
+                return BadRequest(_modelValidatorService.ValidateModelState(validationResult.Errors));
 
             var result = await _registrationService.CheckUserExistingAlready(registerRequest.Email);
             if (result)
@@ -125,11 +131,10 @@ namespace ElderlyCareSupport.Server.Controllers
         [HttpGet($"{nameof(ForgotPassword)}/{{emailId}}")]
         public async Task<IActionResult> ForgotPassword(string emailId)
         {
-            if (!ModelState.IsValid)
-            {
-                var errorMessage = _modelValidatorService.ValidateModelState(ModelState);
-                return Ok(errorMessage);
-            }
+            var validationResult = await _emailValidator.ValidateAsync(emailId);
+            if (!validationResult.IsValid)
+                return BadRequest(_modelValidatorService.ValidateModelState(validationResult.Errors));
+
 
             var result = await _forgotPasswordServicesWordService.GetForgotPassword(emailId);
             return Ok(string.IsNullOrEmpty(result)

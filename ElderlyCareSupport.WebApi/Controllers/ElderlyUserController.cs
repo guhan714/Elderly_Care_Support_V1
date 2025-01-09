@@ -1,7 +1,8 @@
 ﻿using System.Net;
-using ElderlyCareSupport.Server.Common;
-using ElderlyCareSupport.Server.DTOs;
-using ElderlyCareSupport.Server.Services.Interfaces;
+using ElderlyCareSupport.Application.Common;
+using ElderlyCareSupport.Application.DTOs;
+using ElderlyCareSupport.Application.IService;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,13 +17,16 @@ namespace ElderlyCareSupport.Server.Controllers
         private readonly IUserProfileService<ElderUserDto> _elderlyUserProfileService;
         private readonly IApiResponseFactoryService _aPiResponseFactoryService;
         private readonly IModelValidatorService _modelValidatorService;
+        private readonly IValidator<ElderUserDto> _validator;
 
         public ElderlyUserController(IUserProfileService<ElderUserDto> elderlyUserProfileService,
-            IApiResponseFactoryService aPiResponseFactoryService, IModelValidatorService modelValidatorService)
+            IApiResponseFactoryService aPiResponseFactoryService, IModelValidatorService modelValidatorService,
+            IValidator<ElderUserDto> validator)
         {
             _elderlyUserProfileService = elderlyUserProfileService;
             _aPiResponseFactoryService = aPiResponseFactoryService;
             _modelValidatorService = modelValidatorService;
+            _validator = validator;
         }
 
         [HttpGet($"{nameof(GetElderlyUserDetails)}/{{emailId}}")]
@@ -40,14 +44,12 @@ namespace ElderlyCareSupport.Server.Controllers
         }
 
         [HttpPut($"{nameof(UpdateElderDetails)}/{{emailId}}")]
-        public async Task<IActionResult> UpdateElderDetails(string emailId, [FromBody] ElderUserDto? elderCareAccount)
+        public async Task<IActionResult> UpdateElderDetails(string emailId, [FromBody] ElderUserDto elderCareAccount)
         {
-            if (!ModelState.IsValid)
-            {
-                var errorMessage = _modelValidatorService.ValidateModelState(ModelState);
-                return Ok(errorMessage);
-            }
-
+            var validationResult = await _validator.ValidateAsync(elderCareAccount);
+            if (!validationResult.IsValid)
+                return Ok(_modelValidatorService.ValidateModelState(validationResult.Errors));
+            
             var updateResult = await _elderlyUserProfileService.UpdateUserDetails(emailId, elderCareAccount);
 
             return Ok(_aPiResponseFactoryService.CreateResponse(success: updateResult,
@@ -60,7 +62,7 @@ namespace ElderlyCareSupport.Server.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return Ok(_modelValidatorService.ValidateModelState(ModelState));
+                return Ok();
             }
 
             return Ok();

@@ -1,7 +1,8 @@
 ﻿using System.Net;
-using ElderlyCareSupport.Server.Common;
-using ElderlyCareSupport.Server.DTOs;
-using ElderlyCareSupport.Server.Services.Interfaces;
+using ElderlyCareSupport.Application.Common;
+using ElderlyCareSupport.Application.Contracts;
+using ElderlyCareSupport.Application.DTOs;
+using ElderlyCareSupport.Application.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,11 +33,11 @@ namespace ElderlyCareSupport.Server.Controllers
         public async Task<IActionResult> UpdateElderDetailsById(string emailId,
             [FromBody] VolunteerUserDto? elderCareAccount)
         {
-            if (!ModelState.IsValid)
-            {
-                var errorMessage = modelValidatorService.ValidateModelState(ModelState);
-                return Ok(errorMessage);
-            }
+            // if (!ModelState.IsValid)
+            // {
+            //     var errorMessage = modelValidatorService.ValidateModelState(ModelState);
+            //     return Ok(errorMessage);
+            // }
 
             var updateResult = await userProfileService.UpdateUserDetails(emailId, elderCareAccount);
 
