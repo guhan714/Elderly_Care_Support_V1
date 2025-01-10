@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
+using ElderlyCareSupport.SQL;
 using Microsoft.Extensions.Logging;
 
 namespace ElderlyCareSupport.Infrastructure.Repository
@@ -22,9 +23,8 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             try
             {
                 using var connection = _dbConnection.GetConnection();
-                var password = await connection.QueryFirstOrDefaultAsync<string>("""
-                    SELECT Password FROM ElderCareAccount WHERE Email = @userName
-                    """, new { userName });
+                connection.Open();
+                var password = await connection.QueryFirstOrDefaultAsync<string>(AuthenticationQueries.ForgotPasswordQuery, new {userName});
                 return password ?? string.Empty;
             }
             catch (Exception ex)

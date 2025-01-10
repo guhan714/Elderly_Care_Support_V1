@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using ElderlyCareSupport.Application.Enums;
+﻿using ElderlyCareSupport.Application.Enums;
 
 namespace ElderlyCareSupport.Application.Contracts
 {

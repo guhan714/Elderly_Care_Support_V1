@@ -49,7 +49,7 @@ namespace ElderlyCareSupport.Server.Controllers
         public async Task<IActionResult> GetFeeDetails()
         {
             var feeConfigurationDto = await _feeService.GetAllFeeDetails();
-            if (feeConfigurationDto.Count != 0)
+            if (feeConfigurationDto.Count == 0)
             {
                 _logger.LogInformation(
                     $"Data Couldn't be fetched from the server...\nClass: {nameof(ElderlyCareSupportAccountController)} Method: {nameof(GetFeeDetails)}");

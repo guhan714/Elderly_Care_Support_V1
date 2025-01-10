@@ -3,6 +3,9 @@ using ElderlyCareSupport.Application.DTOs;
 using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
 using ElderlyCareSupport.Domain.Models;
+using ElderlyCareSupport.SQL;
+using InterpolatedSql.Dapper;
+using InterpolatedSql.SqlBuilders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -29,10 +32,9 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             try
             {
                 using var connection = _dbConnection.GetConnection();
-                var userDetails =
-                    await connection.QueryFirstOrDefaultAsync("SELECT * FROM ElderCareAccount WHERE Email = @emailId",
-                        new { emailId });
-                return userDetails as TReturnObject;
+                connection.Open();
+                var result = await connection.QuerySingleOrDefaultAsync<VolunteerAccount>(UserQueries.GetUserDetailsByEmailId, new { emailId });
+                return result as TReturnObject;
             }
             catch (Exception)
             {
@@ -45,20 +47,9 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             try
             {
                 using var connection = _dbConnection.GetConnection();
+                connection.Open();
                 var changesAsync = await
-                    connection.ExecuteAsync("""
-                                             UPDATE ElderCareAccount
-                                             SET FirstName = @FirstName 
-                                             AND LastName = @LastName 
-                                             AND Gender = @Gender
-                                             AND Address = @Address
-                                             AND PhoneNumber = @PhoneNumber
-                                             AND City = @City
-                                             AND Country = @Country
-                                             AND Region = @Region
-                                             AND PostalCode = @PostalCode
-                                             WHERE Email = @Email
-                                            """, volunteerUserDto);
+                    connection.ExecuteAsync(UserQueries.UpdateUserDetailsByEmailId, new {volunteerUserDto});
                 return changesAsync > 0;
             }
             catch (DbUpdateConcurrencyException exception)

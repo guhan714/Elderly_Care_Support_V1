@@ -17,6 +17,6 @@ namespace ElderlyCareSupport.Application.Contracts.Login
         public string Password { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "User Type is required")]
-        public UsersType UserType { get; set; }
+        public long UserType { get; set; }
     }
 }

@@ -18,20 +18,26 @@ namespace ElderlyCareSupport.Server.Controllers
         private readonly IApiResponseFactoryService _aPiResponseFactoryService;
         private readonly IModelValidatorService _modelValidatorService;
         private readonly IValidator<ElderUserDto> _validator;
+        private readonly IValidator<string> _userNameValidator;
 
         public ElderlyUserController(IUserProfileService<ElderUserDto> elderlyUserProfileService,
             IApiResponseFactoryService aPiResponseFactoryService, IModelValidatorService modelValidatorService,
-            IValidator<ElderUserDto> validator)
+            IValidator<ElderUserDto> validator, IValidator<string> userNameValidator)
         {
             _elderlyUserProfileService = elderlyUserProfileService;
             _aPiResponseFactoryService = aPiResponseFactoryService;
             _modelValidatorService = modelValidatorService;
             _validator = validator;
+            _userNameValidator = userNameValidator;
         }
 
         [HttpGet($"{nameof(GetElderlyUserDetails)}/{{emailId}}")]
         public async Task<IActionResult> GetElderlyUserDetails(string emailId)
         {
+            var validationResult = await _userNameValidator.ValidateAsync(emailId);
+            if(!validationResult.IsValid)
+                return BadRequest(_modelValidatorService.ValidateModelState(validationResult.Errors));
+            
             var elderlyUser = await _elderlyUserProfileService.GetUserDetails(emailId);
             return elderlyUser is null
                 ? NotFound(_aPiResponseFactoryService.CreateResponse(success: false,

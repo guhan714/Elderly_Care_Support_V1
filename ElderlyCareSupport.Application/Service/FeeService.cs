@@ -2,6 +2,7 @@
 using ElderlyCareSupport.Application.Helpers;
 using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
+using ElderlyCareSupport.Application.Mapping;
 using Microsoft.Extensions.Logging;
 
 namespace ElderlyCareSupport.Application.Service
@@ -22,13 +23,13 @@ namespace ElderlyCareSupport.Application.Service
             try
             {
                 var feeDetails = await _feeRepository.GetAllFeeDetailsAsync();  
-                var feeConfigurations = feeDetails.ToArray();
-                if (feeConfigurations.Length == 0)
+                var feeConfigurations = feeDetails.ToList();
+                if (feeConfigurations.Count == 0)
                 {
                     _logger.LogWarning("Can't Fetch Fee Details from {ServiceName}\nAt Method: {MethodName}", nameof(FeeService), nameof(GetAllFeeDetails));
                 }
                 _logger.LogInformation($"Started Fetching Fee Details from {nameof(FeeService)}\nAt Method: {nameof(GetAllFeeDetails)}");
-                return DomainToDtoMapper.ToFeeConfigurationDto(feeConfigurations).ToList();
+                return DomainToDtoMapper.ToFeeConfigurationDto(feeConfigurations);
             }
             catch (Exception ex)
             {

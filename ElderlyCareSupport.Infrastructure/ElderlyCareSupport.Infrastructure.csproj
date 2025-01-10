@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ElderlyCareSupport.Application\ElderlyCareSupport.Application.csproj" />
+      <ProjectReference Include="..\ElderlyCareSupport.SQL\ElderlyCareSupport.SQL.csproj" />
     </ItemGroup>
 
     <ItemGroup>

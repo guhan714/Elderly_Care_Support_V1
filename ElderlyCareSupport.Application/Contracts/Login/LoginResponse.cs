@@ -2,8 +2,6 @@
 
 namespace ElderlyCareSupport.Application.Contracts.Login;
 
-using System.Text.Json;
-
 public record LoginResponse(
     [property: JsonPropertyName("accessToken")] 
     string AccessToken,

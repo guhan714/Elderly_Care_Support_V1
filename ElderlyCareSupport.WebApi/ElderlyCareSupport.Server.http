@@ -1,9 +1,0 @@
-@ElderlyCareSupport.Server_HostAddress = https://localhost:44313
-
-GET {{ElderlyCareSupport.Server_HostAddress}}/api/ElderlyCareSupportAccount/GetFeeDetails/
-Accept: application/json
-
-###
-GET {{ElderlyCareSupport.Server_HostAddress}}/api/ElderlyCareSupportAccount/GetFeeDetails/
-Accept: application/json
-###

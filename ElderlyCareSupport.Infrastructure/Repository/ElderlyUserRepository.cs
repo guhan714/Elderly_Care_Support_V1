@@ -1,7 +1,10 @@
-﻿using ElderlyCareSupport.Application.DTOs;
+﻿using Dapper;
+using ElderlyCareSupport.Application.DTOs;
+using ElderlyCareSupport.Application.Enums;
 using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
 using ElderlyCareSupport.Domain.Models;
+using ElderlyCareSupport.SQL;
 using InterpolatedSql.Dapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -25,8 +28,8 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             try
             {
                 using var connection = _dbConnection.GetConnection();
-                var query = connection.SqlBuilder($"SELECT TOP 1 * FROM ElderCareAccount WHERE Email = {emailId};");
-                var result = await query.QuerySingleOrDefaultAsync<ElderCareAccount?>();
+                connection.Open();
+                var result = await connection.QuerySingleOrDefaultAsync<ElderCareAccount>(UserQueries.GetUserDetailsByEmailId, new { emailId, UsersType.ElderlyUser});
                 _logger.LogInformation(
                     $"The process has been started to fetch the ElderlyUserDetails... At {nameof(ElderlyUserRepository<ElderCareAccount,ElderUserDto>)}\tMethod: {nameof(GetUserDetailsAsync)}");
                 return result as TReturnObject;
@@ -44,21 +47,8 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             try
             {
                 using var connection = _dbConnection.GetConnection();
-                var query = connection.SqlBuilder($"""
-                                                      UPDATE ElderCareAccount
-                                                      SET FirstName = {elderCareAccount.FirstName} 
-                                                      ,LastName = {elderCareAccount.LastName}
-                                                      ,Gender = {elderCareAccount.Gender}
-                                                      ,Address = {elderCareAccount.Address}
-                                                      ,PhoneNumber = {elderCareAccount.PhoneNumber}
-                                                      ,City = {elderCareAccount.City}
-                                                      ,Country = {elderCareAccount.Country}
-                                                      ,Region = {elderCareAccount.Region}
-                                                      ,PostalCode = {elderCareAccount.PostalCode}
-                                                      WHERE Email = {elderCareAccount.Email}; 
-                                                      """
-                );
-                var successfulUpdate = await query.ExecuteScalarAsync<int>();
+                connection.Open();
+                var successfulUpdate = await connection.ExecuteScalarAsync<int>(UserQueries.UpdateUserDetailsByEmailId, new {elderCareAccount});
                 return successfulUpdate >= 1;
             }
             catch (DbUpdateConcurrencyException ex)
