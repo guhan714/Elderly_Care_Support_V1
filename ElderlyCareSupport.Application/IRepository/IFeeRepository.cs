@@ -4,6 +4,6 @@ namespace ElderlyCareSupport.Application.IRepository
 {
     public interface IFeeRepository
     {
-        Task<IEnumerable<FeeConfiguration>> GetAllFeeDetailsAsync();
+        Task<IReadOnlyList<FeeConfiguration>> GetAllFeeDetailsAsync();
     }
 }

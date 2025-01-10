@@ -3,7 +3,9 @@ using ElderlyCareSupport.Application.Contracts;
 using ElderlyCareSupport.Application.Helpers;
 using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
+using ElderlyCareSupport.Application.Mapping;
 using ElderlyCareSupport.Domain.Models;
+using ElderlyCareSupport.SQL;
 using Microsoft.Extensions.Logging;
 
 namespace ElderlyCareSupport.Infrastructure.Repository
@@ -25,17 +27,12 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             try
             {
                 using var connection = _dbConnection.GetConnection();
+                connection.Open();
                 var registerModel = DtoToDomainMapper.ToElderCareAccount(registrationRequest);
 
                 _logger.LogInformation(
                     $"Registration has been started at Class: {nameof(RegistrationRepository)} --> Method: {nameof(RegisterUser)}");
-                var changes = await connection.ExecuteAsync(@"
-                                INSERT INTO ElderCareAccount (
-                                    FirstName, LastName, Email, Password,  PhoneNumber, Gender, Address, City, Region, PostalCode, Country, UserType, IsActive
-                                )
-                                VALUES (
-                                    @FirstName, @LastName, @Email, @Password,  @PhoneNumber, @Gender, @Address, @City, @Region, @PostalCode, @Country, @UserType, @IsActive
-                                );", registerModel);
+                var changes = await connection.ExecuteAsync(AuthenticationQueries.RegistrationQuery, registerModel);
                 
                 if (changes == 0)
                 {
@@ -64,9 +61,8 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             try
             {
                 using var connection = _dbConnection.GetConnection();
-                var isExistingUser = await connection.QuerySingleOrDefaultAsync<ElderCareAccount>("""
-                    SELECT COUNT(*) FROM ElderCareAccount WHERE Email = @email;
-                    """, new { email });
+                connection.Open();
+                var isExistingUser = await connection.QuerySingleOrDefaultAsync<ElderCareAccount>(AuthenticationQueries.ExistingUserQuery, email);
                 return isExistingUser is not null;
             }
             catch (Exception ex)

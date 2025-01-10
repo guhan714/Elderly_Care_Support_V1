@@ -4,16 +4,16 @@ namespace ElderlyCareSupport.Application.DTOs
 {
     public class VolunteerUserDto
     {
-        public string FirstName { get; } = string.Empty;
-        public string? LastName { get; }
+        public string FirstName { get; set; } = string.Empty;
+        public string? LastName { get; set;}
         public string Email { get; set; } = string.Empty;
-        public string Gender { get; } = string.Empty;
-        public string Address { get; } = string.Empty;
-        public string City { get; } = string.Empty;
-        public string Region { get; } = string.Empty;
-        public string Country { get; } = string.Empty;
+        public string Gender { get; set;} = string.Empty;
+        public string Address { get; set;} = string.Empty;
+        public string City { get; set;} = string.Empty;
+        public string Region { get; set;} = string.Empty;
+        public string Country { get; set;} = string.Empty;
         public long PhoneNumber { get; set; }
-        public long PostalCode { get; }
-        public UsersType UserType { get; set; }
+        public long PostalCode { get; set;}
+        public long UserType { get; set; }
     }
 }

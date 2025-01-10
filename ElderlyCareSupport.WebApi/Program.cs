@@ -5,8 +5,6 @@ using Serilog;
 using System.Text;
 using ElderlyCareSupport.Application;
 using ElderlyCareSupport.Application.Common;
-using ElderlyCareSupport.Application.Contracts;
-using ElderlyCareSupport.Application.Contracts.Login;
 using ElderlyCareSupport.Application.DTOs;
 using ElderlyCareSupport.Application.Helpers;
 using ElderlyCareSupport.Application.IRepository;
@@ -48,7 +46,6 @@ builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>(db =>
 //     options.UseSqlServer(builder.Configuration.GetConnectionString("ElderDB"));
 // });
 
-builder.Services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

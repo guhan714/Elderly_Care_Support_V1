@@ -3,6 +3,8 @@ using ElderlyCareSupport.Application.Contracts.Login;
 using ElderlyCareSupport.Application.Helpers;
 using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
+using ElderlyCareSupport.Domain.Models;
+using ElderlyCareSupport.SQL;
 using Microsoft.Extensions.Logging;
 
 namespace ElderlyCareSupport.Infrastructure.Repository
@@ -19,27 +21,24 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             _dbConnection = dbConnection;
         }
 
-        public async Task<bool> AuthenticateLogin(LoginRequest loginRequest)
+        public async Task<bool> AuthenticateLogin(LoginRequest loginCredentials)
         {
             using var connection = _dbConnection.GetConnection();
+            connection.Open();
             var enumerableHashedPassword = await
-                connection.QueryAsync<string>("""
-                                                    SELECT PASSWORD 
-                                                    FROM ElderCareAccount 
-                                                    WHERE Email = @Email AND UserType = @UserType 
-                                                 """, loginRequest);
+                connection.QueryAsync<string>(AuthenticationQueries.LoginQuery, loginCredentials);
 
             var hashedPassword = enumerableHashedPassword as string[] ?? enumerableHashedPassword.ToArray();
             if (hashedPassword.Length == 0)
             {
-                _logger.LogWarning("Invalid login attempt for email: {Email}", loginRequest.Email);
+                _logger.LogWarning("Invalid login attempt for email: {Email}", loginCredentials.Email);
                 return false;
             }
 
-            var isAuthenticated = BCryptEncryptionService.VerifyPassword(loginRequest.Password, hashedPassword[0]);
+            var isAuthenticated = BCryptEncryptionService.VerifyPassword(loginCredentials.Password, hashedPassword[0]);
             if (!isAuthenticated)
             {
-                _logger.LogWarning("Password mismatch for email: {Email}", loginRequest.Email);
+                _logger.LogWarning("Password mismatch for email: {Email}", loginCredentials.Email);
             }
 
             return isAuthenticated;

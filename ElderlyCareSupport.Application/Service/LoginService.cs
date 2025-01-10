@@ -1,6 +1,7 @@
 ﻿using ElderlyCareSupport.Application.Contracts.Login;
 using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
+using ElderlyCareSupport.Domain.Models;
 using Microsoft.Extensions.Logging;
 
 namespace ElderlyCareSupport.Application.Service

@@ -1,7 +1,9 @@
-﻿using ElderlyCareSupport.Application.DTOs;
+﻿using ElderlyCareSupport.Application.Contracts.Common;
+using ElderlyCareSupport.Application.DTOs;
 using ElderlyCareSupport.Application.Helpers;
 using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
+using ElderlyCareSupport.Application.Mapping;
 using ElderlyCareSupport.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -24,12 +26,12 @@ namespace ElderlyCareSupport.Application.Service
             try
             {
                 var result = await RetryHelper.RetryAsync(() => _volunteerRepository.GetUserDetailsAsync(emailId), 3, _logger);
-                return result as T ?? null;
+                return result is not null ? DomainToDtoMapper.ToVolunteerUserDto(result) as T : EmptyModels.EmptyVolunteerUser as T;
             }
             catch (Exception ex)
             {
                 _logger.LogError("Exception Occurred : {Exception}.", ex.Message);
-                return null;
+                return EmptyModels.EmptyVolunteerUser as T;
             }
         }
 

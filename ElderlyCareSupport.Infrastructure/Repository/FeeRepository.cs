@@ -2,6 +2,7 @@
 using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
 using ElderlyCareSupport.Domain.Models;
+using ElderlyCareSupport.SQL;
 using Microsoft.Extensions.Logging;
 
 namespace ElderlyCareSupport.Infrastructure.Repository
@@ -17,18 +18,15 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             _dbConnection = dbConnection;
         }
 
-        public async Task<IEnumerable<FeeConfiguration>> GetAllFeeDetailsAsync()
+        public async Task<IReadOnlyList<FeeConfiguration>> GetAllFeeDetailsAsync()
         {
             try
             {
                 using var connection = _dbConnection.GetConnection();
+                connection.Open();
                 _logger.LogInformation("Data Fetching Started:  class: {Class} Method: {Method}", nameof(FeeRepository), nameof(GetAllFeeDetailsAsync));
                 var result = await
-                    connection.QueryAsync<FeeConfiguration>("""
-                               SELECT
-                               FEE_ID AS FeeId, FEE_NAME AS FeeName, FEE_AMOUNT AS FeeAmount, Description as description
-                               FROM dbo.FEE_CONFIGURATION;
-                            """);
+                    connection.QueryAsync<FeeConfiguration>(AuthenticationQueries.AllFeeDetailsQuery);
                 return result.ToList();
             }
             catch (Exception ex)
