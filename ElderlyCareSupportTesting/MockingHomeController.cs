@@ -154,8 +154,8 @@ public class MockHomeController
 
 
     [Theory]
-    [InlineData("user@sample.com", "stringst",  3)]
-    private async Task AuthenticateUser_ShouldReturnUnauthorized_WhenUserIsNotAuthenticated(string userEmail, string password, long userType)
+    [InlineData("user@sample.com", "stringst",  UsersType.ElderlyUser)]
+    private async Task AuthenticateUser_ShouldReturnUnauthorized_WhenUserIsNotAuthenticated(string userEmail, string password, UsersType userType)
     {
         var loginRequest = new LoginRequest
         {
