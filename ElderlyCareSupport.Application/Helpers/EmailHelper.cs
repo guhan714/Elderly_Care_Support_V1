@@ -15,11 +15,11 @@ public class EmailHelper(IConfiguration configuration) : IEmailService
         var apiKey = _configuration["SendGridAPI"]!;
         var client = new SendGridClient(apiKey);
 
-        EmailAddress from = new(CommonConstants.SenderEmailAddress, CommonConstants.SenderNamePlaceHolder);
-        const string subject = CommonConstants.EmailSubject;
+        EmailAddress from = new(Constants.SenderEmailAddress, Constants.SenderNamePlaceHolder);
+        string subject = Constants.EmailSubject;
         var to = new EmailAddress(recipient, "Recipient Name");
         const string plainTextContent = "This is a test email.";
-        var htmlContent = await File.ReadAllTextAsync(CommonConstants.RegistrationMailContentPath);
+        var htmlContent = await File.ReadAllTextAsync(Constants.RegistrationMailContentPath);
         htmlContent = htmlContent.Replace("{{UserName}}", userName);
 
         var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);

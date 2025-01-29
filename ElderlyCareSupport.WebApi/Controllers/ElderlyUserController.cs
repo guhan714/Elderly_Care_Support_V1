@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using ElderlyCareSupport.Application.Common;
+using ElderlyCareSupport.Application.Contracts.Response;
 using ElderlyCareSupport.Application.DTOs;
 using ElderlyCareSupport.Application.IService;
 using FluentValidation;
@@ -14,11 +15,11 @@ namespace ElderlyCareSupport.Server.Controllers
     [Authorize]
     public class ElderlyUserController : ControllerBase
     {
-        private readonly IUserProfileService<ElderUserDto> _elderlyUserProfileService;
         private readonly IApiResponseFactoryService _aPiResponseFactoryService;
+        private readonly IUserProfileService<ElderUserDto> _elderlyUserProfileService;
         private readonly IModelValidatorService _modelValidatorService;
-        private readonly IValidator<ElderUserDto> _validator;
         private readonly IValidator<string> _userNameValidator;
+        private readonly IValidator<ElderUserDto> _validator;
 
         public ElderlyUserController(IUserProfileService<ElderUserDto> elderlyUserProfileService,
             IApiResponseFactoryService aPiResponseFactoryService, IModelValidatorService modelValidatorService,
@@ -42,11 +43,11 @@ namespace ElderlyCareSupport.Server.Controllers
             return elderlyUser is null
                 ? NotFound(_aPiResponseFactoryService.CreateResponse(success: false,
                     code: HttpStatusCode.NotFound,
-                    statusMessage: CommonConstants.StatusMessageNotFound, data: elderlyUser,
-                    errorMessage: string.Format(CommonConstants.NotFound, "user")))
+                    statusMessage: Constants.StatusMessageNotFound, data: elderlyUser,
+                    errorMessage: string.Format(Constants.NotFound, "user")))
                 : Ok(_aPiResponseFactoryService.CreateResponse(success: true,
                     code: HttpStatusCode.OK,
-                    statusMessage: CommonConstants.StatusMessageOk, data: elderlyUser));
+                    statusMessage: Constants.StatusMessageOk, data: elderlyUser));
         }
 
         [HttpPut($"{nameof(UpdateElderDetails)}/{{emailId}}")]
@@ -54,24 +55,26 @@ namespace ElderlyCareSupport.Server.Controllers
         {
             var validationResult = await _validator.ValidateAsync(elderCareAccount);
             if (!validationResult.IsValid)
+            {
                 return Ok(_modelValidatorService.ValidateModelState(validationResult.Errors));
-            
+            }
+
             var updateResult = await _elderlyUserProfileService.UpdateUserDetails(emailId, elderCareAccount);
 
             return Ok(_aPiResponseFactoryService.CreateResponse(success: updateResult,
                 code: updateResult ? HttpStatusCode.Created : HttpStatusCode.InternalServerError,
-                statusMessage: CommonConstants.StatusMessageOk, data: new List<string>()));
+                statusMessage: Constants.StatusMessageOk, data: new List<string>()));
         }
 
         [HttpPost($"{nameof(CreateTask)}")]
-        public async Task<IActionResult> CreateTask()
+        public Task<IActionResult> CreateTask()
         {
             if (!ModelState.IsValid)
             {
-                return Ok();
+                return Task.FromResult<IActionResult>(Ok());
             }
 
-            return Ok();
+            return Task.FromResult<IActionResult>(Ok());
         }
     }
 }

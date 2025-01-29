@@ -15,9 +15,8 @@ namespace ElderlyCareSupport.Application.Helpers
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError("Error: {Message}", ex.Message);
+                    logger.LogError(ex,"Error.");
                     attempt++;
-                    throw;
                 }
             }
             return default;

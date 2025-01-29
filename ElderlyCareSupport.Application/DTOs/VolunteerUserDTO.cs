@@ -1,6 +1,4 @@
-﻿using ElderlyCareSupport.Application.Enums;
-
-namespace ElderlyCareSupport.Application.DTOs
+﻿namespace ElderlyCareSupport.Application.DTOs
 {
     public class VolunteerUserDto
     {

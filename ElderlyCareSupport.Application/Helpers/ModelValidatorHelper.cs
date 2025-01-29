@@ -1,8 +1,6 @@
 ﻿using System.Net;
-using System.Web.Http.ModelBinding;
 using ElderlyCareSupport.Application.Common;
-using ElderlyCareSupport.Application.Contracts;
-using ElderlyCareSupport.Application.Contracts.Common;
+using ElderlyCareSupport.Application.Contracts.Response;
 using ElderlyCareSupport.Application.IService;
 using FluentValidation.Results;
 
@@ -10,9 +8,9 @@ namespace ElderlyCareSupport.Application.Helpers
 {
     public class ModelValidatorHelper(IApiResponseFactoryService apiResponseFactoryService) : IModelValidatorService
     {
-        public ApiResponseModel<IEnumerable<string>> ValidateModelState(List<ValidationFailure> modelStateDictionary)
+        public ApiResponseModel<IEnumerable<string>> ValidateModelState(IEnumerable<ValidationFailure> validationFailures)
         {
-            var errorList = modelStateDictionary
+            var errorList = validationFailures
                 .Select(e => new Error { ErrorName = e.ErrorMessage })
                 .ToArray();
 
@@ -20,8 +18,8 @@ namespace ElderlyCareSupport.Application.Helpers
                 data: Enumerable.Empty<string>(),
                 success: false,
                 code:HttpStatusCode.BadRequest,
-                statusMessage: CommonConstants.StatusMessageBadRequest,
-                errorMessage: CommonConstants.ValidationErrorMessage,
+                statusMessage: Constants.StatusMessageBadRequest,
+                errorMessage: Constants.ValidationErrorMessage,
                 error: errorList
             );
         }

@@ -1,11 +1,12 @@
-﻿using ElderlyCareSupport.Application.Contracts.Login;
+﻿using ElderlyCareSupport.Application.Contracts.Requests;
+using ElderlyCareSupport.Application.Contracts.Response;
 using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
-using ElderlyCareSupport.Domain.Models;
-using Microsoft.Extensions.Logging;
 
 namespace ElderlyCareSupport.Application.Service
 {
+    using Microsoft.Extensions.Logging;
+
     public class LoginService : ILoginService
     {
         private readonly ILoginRepository _loginRepository;
@@ -36,7 +37,7 @@ namespace ElderlyCareSupport.Application.Service
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception Occurred in the Login Authentication from {nameof(LoginService)}\nAt Method: {nameof(AuthenticateLogin)}\nException Message: {ex.Message}");
+                _logger.LogError(ex, "Exception Occurred in the Login Authentication from {LoginService}\nAt Method: {AuthenticateLogin}", nameof(LoginService), nameof(AuthenticateLogin));
                 return Tuple.Create(new LoginResponse(AccessToken :string.Empty, RefreshToken: string.Empty,ExpiresIn: 0), false)!;
             }
         }

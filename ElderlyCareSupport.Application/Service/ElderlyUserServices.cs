@@ -1,22 +1,26 @@
-﻿using ElderlyCareSupport.Application.DTOs;
+﻿using ElderlyCareSupport.Application.Contracts.Response;
+using ElderlyCareSupport.Application.DTOs;
 using ElderlyCareSupport.Application.Helpers;
 using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
 using ElderlyCareSupport.Application.Mapping;
 using ElderlyCareSupport.Domain.Models;
-using Microsoft.Extensions.Logging;
 
 namespace ElderlyCareSupport.Application.Service
 {
-    public class ElderlyUserServices<T> : IUserProfileService<T> where T : ElderUserDto, new()
-    {
-        private readonly ILogger<ElderlyUserServices<ElderUserDto>> _logger;
-        private readonly IUserRepository<ElderCareAccount, ElderUserDto> _userRepository;
+    using Microsoft.Extensions.Logging;
 
-        public ElderlyUserServices(ILogger<ElderlyUserServices<ElderUserDto>> logger, IUserRepository<ElderCareAccount,ElderUserDto> userRepository)
+    public class ElderlyUserServices<T> : IUserProfileService<T>
+        where T : ElderUserDto, new()
+    {
+        private readonly ILogger<ElderlyUserServices<T>> _logger;
+        private readonly IUserRepository<ElderCareAccount, ElderUserDto> _userRepository;
+        private readonly EmptyModelProvider _emptyModelProvider;
+        public ElderlyUserServices(ILogger<ElderlyUserServices<T>> logger, IUserRepository<ElderCareAccount,ElderUserDto> userRepository, EmptyModelProvider emptyModelProvider)
         {
             _logger = logger;
             _userRepository = userRepository;
+            _emptyModelProvider = emptyModelProvider;
         }
 
         public async Task<T?> GetUserDetails(string emailId)
@@ -24,29 +28,27 @@ namespace ElderlyCareSupport.Application.Service
             try
             {
                 var result = await RetryHelper.RetryAsync(() => _userRepository.GetUserDetailsAsync(emailId), 3, _logger);
-                return DomainToDtoMapper.ToElderUserDto(result) as T;
+                return MapToDomain.ToElderUserDto(result!) as T ?? _emptyModelProvider.EmptyElderUser as T;
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error Fetching Data {Message}", ex.Message);
+                _logger.LogError(ex, "Error Fetching Data");
                 return null;
             }
         }
 
-        public async Task<bool> UpdateUserDetails(string emailId, T? elderUserDto)
+        public async Task<bool> UpdateUserDetails(string emailId, T? userAccount)
         {
             try
             {
-                if (elderUserDto is null)
+                if (userAccount is null)
                 {
                     return false;
                 }
 
-                var result = await _userRepository.UpdateUserDetailsAsync(emailId, elderUserDto);
-
+                var result = await _userRepository.UpdateUserDetailsAsync(emailId, userAccount);
                 return result;
             }
-
             catch (Exception)
             {
                 return false;

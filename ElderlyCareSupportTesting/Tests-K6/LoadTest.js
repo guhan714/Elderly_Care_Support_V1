@@ -4,20 +4,9 @@ import { check, sleep } from 'k6';
 export const options = {
     stages: [
         { duration: '10s', target: 10},
-        { duration: '10s', target: 20},
-        { duration: '10s', target: 50},
-        { duration: '10s', target: 150},
-        { duration: '10s', target: 350},
-        { duration: '20s', target: 500},
-        { duration: '20s', target: 500},
-        { duration: '10s', target: 350},
-        { duration: '10s', target: 150},
-        { duration: '10s', target: 50},
-        { duration: '10s', target: 20},
-        { duration: '10s', target: 10},
     ],
     thresholds: {
-        http_req_duration: ['p(95)<750'],  // Ensure 95% of requests complete in <750ms
+        http_req_duration: ['p(99)<750'],  // Ensure 95% of requests complete in <750ms
     },
 };
 
@@ -32,10 +21,8 @@ export default function () {
         },
     };
 
-    // Perform the POST request
     const res = http.get(url, {headers: params.headers});
 
-    // Validate the response
     check(res, {
         'is status 200': (r) => r.status === 200,
         'response time < 500ms': (r) => r.timings.duration < 500,

@@ -1,9 +1,8 @@
 ﻿using Dapper;
-using ElderlyCareSupport.Application.Contracts.Login;
+using ElderlyCareSupport.Application.Contracts.Requests;
 using ElderlyCareSupport.Application.Helpers;
 using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
-using ElderlyCareSupport.Domain.Models;
 using ElderlyCareSupport.SQL;
 using Microsoft.Extensions.Logging;
 

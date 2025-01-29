@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using ElderlyCareSupport.Application.Common;
-using ElderlyCareSupport.Application.Contracts;
+using ElderlyCareSupport.Application.Contracts.Response;
 using ElderlyCareSupport.Application.DTOs;
 using ElderlyCareSupport.Application.IService;
 using Microsoft.AspNetCore.Authorization;
@@ -22,11 +22,11 @@ namespace ElderlyCareSupport.Server.Controllers
             var volunteerUser = await userProfileService.GetUserDetails(emailId);
             return volunteerUser is not null
                 ? Ok(responseFactoryService.CreateResponse(data: volunteerUser, success: true, code: HttpStatusCode.OK
-                    , statusMessage: CommonConstants.StatusMessageOk))
+                    , statusMessage: Constants.StatusMessageOk))
                 : Ok(responseFactoryService.CreateResponse(data: volunteerUser, success: false,
                     code: HttpStatusCode.NotFound
-                    , statusMessage: CommonConstants.StatusMessageNotFound,
-                    error: [new Error { ErrorName = string.Format(CommonConstants.NotFound, nameof(User)) }]));
+                    , statusMessage: Constants.StatusMessageNotFound,
+                    error: [new Error { ErrorName = string.Format(Constants.NotFound, nameof(User)) }]));
         }
 
         [HttpPut($"{nameof(UpdateElderDetailsById)}/{{emailId}}")]
@@ -44,7 +44,7 @@ namespace ElderlyCareSupport.Server.Controllers
             return Ok(responseFactoryService.CreateResponse(success: updateResult,
                 code: updateResult ? HttpStatusCode.OK : HttpStatusCode.InternalServerError,
             statusMessage:
-            CommonConstants.StatusMessageOk, data:
+            Constants.StatusMessageOk, data:
             new List<string>()));
         }
     }

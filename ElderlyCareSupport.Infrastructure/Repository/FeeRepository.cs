@@ -31,7 +31,7 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError("Exception occured:  class: {Class} Method: {Method}\nMessage: {Ex}", nameof(FeeRepository), nameof(GetAllFeeDetailsAsync), ex.Message);
+                _logger.LogError(ex,"Exception occured:  class: {Class} Method: {Method}", nameof(FeeRepository), nameof(GetAllFeeDetailsAsync));
                 return [];
             }
         }

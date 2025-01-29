@@ -1,6 +1,5 @@
 ﻿using Dapper;
-using ElderlyCareSupport.Application.Contracts;
-using ElderlyCareSupport.Application.Helpers;
+using ElderlyCareSupport.Application.Contracts.Requests;
 using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
 using ElderlyCareSupport.Application.Mapping;
@@ -28,7 +27,7 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             {
                 using var connection = _dbConnection.GetConnection();
                 connection.Open();
-                var registerModel = DtoToDomainMapper.ToElderCareAccount(registrationRequest);
+                var registerModel = MapToDto.ToElderCareAccount(registrationRequest);
 
                 _logger.LogInformation(
                     $"Registration has been started at Class: {nameof(RegistrationRepository)} --> Method: {nameof(RegisterUser)}");
@@ -37,7 +36,7 @@ namespace ElderlyCareSupport.Infrastructure.Repository
                 if (changes == 0)
                 {
                     _logger.LogWarning(
-                        "Registration failed, no changes were saved for user: {registrationViewModel.Email}",
+                        "Registration failed, no changes were saved for user: {RegistrationViewModel}",
                         nameof(registrationRequest.Email));
                     return false;
                 }
@@ -48,9 +47,9 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(
-                    "Registration has been Failed at Class: {RegistrationRepository} --> Method: {RegisterUser}\nException Occurred: {Message}",
-                    nameof(RegistrationRepository), nameof(RegisterUser), ex.Message);
+                _logger.LogError(ex,
+                    "Registration has been Failed at Class: {RegistrationRepository} --> Method: {RegisterUser}\nException Occurred",
+                    nameof(RegistrationRepository), nameof(RegisterUser));
                 return false;
             }
         }
@@ -67,7 +66,7 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError("Exception Occurred. {Message}", ex.Message);
+                _logger.LogError(ex, "Exception Occurred. {Message}", ex.Message);
                 return false;
             }
         }

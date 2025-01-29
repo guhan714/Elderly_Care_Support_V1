@@ -1,4 +1,4 @@
-﻿using ElderlyCareSupport.Application.Contracts.Login;
+﻿using ElderlyCareSupport.Application.Contracts.Response;
 using ElderlyCareSupport.Application.IService;
 using IdentityModel.Client;
 using Microsoft.Extensions.Configuration;
@@ -61,7 +61,7 @@ namespace ElderlyCareSupport.Application.Helpers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Exception occurred. {Exception}.", ex.Message);
+                _logger.LogError(ex, "Exception occurred. {Exception}.", ex.Message);
                 return string.Empty;
             }
         }
@@ -75,7 +75,7 @@ namespace ElderlyCareSupport.Application.Helpers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Exception has been occurred : {Exception}", ex.Message);
+                _logger.LogError(ex, "Exception has been occurred : {Exception}", ex.Message);
                 return null;
             }
         }
