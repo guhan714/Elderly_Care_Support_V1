@@ -29,7 +29,7 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(
+                _logger.LogError(ex, 
                     "Error Occured during the password retrieval process...At Class {ClassName} Method: {MethodName} ErrorMessage: {Error}",
                     nameof(ForgotPasswordRepository), nameof(GetPasswordAsync), ex.Message);
                 return string.Empty;

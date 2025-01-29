@@ -18,7 +18,6 @@ namespace ElderlyCareSupport.Application.Helpers
             return Convert.ToBase64String(hasher.GetBytes(32)); // 32-byte hash
         }
 
-        [Obsolete("Obsolete")]
         public static byte[] GenerateSalt()
         {
             var salt = new byte[16];

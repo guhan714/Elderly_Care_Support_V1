@@ -1,9 +1,10 @@
 ﻿using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
-using Microsoft.Extensions.Logging;
 
 namespace ElderlyCareSupport.Application.Service
 {
+    using Microsoft.Extensions.Logging;
+
     public class ForgotPasswordService : IForgotPaswordService
     {
         private readonly IForgotPasswordRepository _forgotPasswordRepository;
@@ -14,7 +15,7 @@ namespace ElderlyCareSupport.Application.Service
             _forgotPasswordRepository = forgotPasswordRepository;
             _logger = logger;
         }
-
+        
         public async Task<string?> GetForgotPassword(string userName)
         {
             try
@@ -23,7 +24,7 @@ namespace ElderlyCareSupport.Application.Service
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception has been occurred in the {nameof(ForgotPasswordService)} Method: {nameof(GetForgotPassword)} Exception: {ex.Message}");
+                _logger.LogError(ex, "Exception has been occurred in the {Class} Method: {Method} Exception: {Message}", nameof(ForgotPasswordService), nameof(GetForgotPassword), ex);
                 return string.Empty;
             }
         }

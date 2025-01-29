@@ -1,4 +1,4 @@
-﻿using ElderlyCareSupport.Application.Contracts;
+﻿using ElderlyCareSupport.Application.Contracts.Requests;
 
 namespace ElderlyCareSupport.Application.IRepository
 {

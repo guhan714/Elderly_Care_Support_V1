@@ -1,5 +1,4 @@
-﻿using ElderlyCareSupport.Application.Contracts.Login;
-using ElderlyCareSupport.Domain.Models;
+﻿using ElderlyCareSupport.Application.Contracts.Requests;
 
 namespace ElderlyCareSupport.Application.IRepository
 {

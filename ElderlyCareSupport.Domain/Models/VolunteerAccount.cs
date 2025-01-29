@@ -1,6 +1,6 @@
 ﻿namespace ElderlyCareSupport.Domain.Models;
 
-public partial class VolunteerAccount
+public class VolunteerAccount
 {
     public long Id { get; set; }
 
@@ -32,5 +32,4 @@ public partial class VolunteerAccount
 
     public bool IsActive { get; set; }
 
-    public byte[] RowVersion { get; set; } = null!;
 }

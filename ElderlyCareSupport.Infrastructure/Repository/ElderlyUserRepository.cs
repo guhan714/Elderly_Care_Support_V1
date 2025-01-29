@@ -5,7 +5,6 @@ using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
 using ElderlyCareSupport.Domain.Models;
 using ElderlyCareSupport.SQL;
-using InterpolatedSql.Dapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -36,8 +35,8 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error Occurred During {Process} and Exception: {Message}",
-                    nameof(GetUserDetailsAsync), ex.Message);
+                _logger.LogError(ex, "Error Occurred During {Process}",
+                    nameof(GetUserDetailsAsync));
                 return null;
             }
         }
@@ -53,13 +52,13 @@ namespace ElderlyCareSupport.Infrastructure.Repository
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                _logger.LogError("Error occurred during {MethodName}. Exception: {ExceptionMessage}",
-                    nameof(UpdateUserDetailsAsync), ex.Message);
+                _logger.LogError(ex, "Error occurred during {MethodName}.",
+                    nameof(UpdateUserDetailsAsync));
                 return false;
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error Occurred connecting to server or processing {Exception}", ex.Message);
+                _logger.LogError(ex, "Error Occurred connecting to server or processing.");
                 return false;
             }
         }

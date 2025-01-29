@@ -4,8 +4,6 @@ using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
 using ElderlyCareSupport.Domain.Models;
 using ElderlyCareSupport.SQL;
-using InterpolatedSql.Dapper;
-using InterpolatedSql.SqlBuilders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

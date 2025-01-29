@@ -1,4 +1,4 @@
-﻿using ElderlyCareSupport.Application.Contracts;
+﻿using ElderlyCareSupport.Application.Contracts.Requests;
 using ElderlyCareSupport.Application.Helpers;
 using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
@@ -26,7 +26,7 @@ namespace ElderlyCareSupport.Application.Service
             }
             catch (Exception ex)
             {
-                _logger.LogError("Exception Occurred: {Message}", ex.Message);
+                _logger.LogError(ex, "Exception Occurred");
                 return false;
             }
         }
@@ -48,7 +48,7 @@ namespace ElderlyCareSupport.Application.Service
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error Registering User Details from {nameof(RegistrationService)} At Method: {nameof(RegisterUserAsync)}\nException: {ex.Message}");
+                _logger.LogError(ex, "Error Registering User Details from {ClassName} At Method: {MethodName}", nameof(RegistrationService), nameof(RegisterUserAsync));
                 return false;
             }
         }

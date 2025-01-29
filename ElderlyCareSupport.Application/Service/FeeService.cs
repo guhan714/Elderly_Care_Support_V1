@@ -1,5 +1,4 @@
 ﻿using ElderlyCareSupport.Application.DTOs;
-using ElderlyCareSupport.Application.Helpers;
 using ElderlyCareSupport.Application.IRepository;
 using ElderlyCareSupport.Application.IService;
 using ElderlyCareSupport.Application.Mapping;
@@ -29,11 +28,11 @@ namespace ElderlyCareSupport.Application.Service
                     _logger.LogWarning("Can't Fetch Fee Details from {ServiceName}\nAt Method: {MethodName}", nameof(FeeService), nameof(GetAllFeeDetails));
                 }
                 _logger.LogInformation($"Started Fetching Fee Details from {nameof(FeeService)}\nAt Method: {nameof(GetAllFeeDetails)}");
-                return DomainToDtoMapper.ToFeeConfigurationDto(feeConfigurations);
+                return MapToDomain.ToFeeConfigurationDto(feeConfigurations);
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error Fetching Fee Details from {Class}\nAt Method: {Method}\nException Message: {Message}", nameof(FeeService), nameof(GetAllFeeDetails), ex.Message);
+                _logger.LogError(ex, "Error Fetching Fee Details from {Class}\nAt Method: {Method}\nException Message: {Message}", nameof(FeeService), nameof(GetAllFeeDetails), ex);
                 return [];
             }
         }

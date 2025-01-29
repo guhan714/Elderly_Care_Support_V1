@@ -1,11 +1,10 @@
-﻿using System.Web.Http.ModelBinding;
-using ElderlyCareSupport.Application.Contracts.Common;
+﻿using ElderlyCareSupport.Application.Contracts.Response;
 using FluentValidation.Results;
 
 namespace ElderlyCareSupport.Application.IService
 {
     public interface IModelValidatorService
     {
-        ApiResponseModel<IEnumerable<string>> ValidateModelState(List<ValidationFailure> validationFailures);
+        ApiResponseModel<IEnumerable<string>> ValidateModelState(IEnumerable<ValidationFailure> validationFailures);
     }
 }

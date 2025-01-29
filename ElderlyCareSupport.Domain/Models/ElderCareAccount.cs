@@ -1,6 +1,6 @@
 ﻿namespace ElderlyCareSupport.Domain.Models;
 
-public partial class ElderCareAccount
+public class ElderCareAccount
 {
     public long Id { get; set; }
 
@@ -29,6 +29,8 @@ public partial class ElderCareAccount
     public long UserType { get; set; }
 
     public bool? IsActive { get; set; }
-
-    public byte[] RowVersion { get; set; } = null!;
+    
+    
+    public string GetDisplay() => $"{FirstName} {LastName}";
+ 
 }

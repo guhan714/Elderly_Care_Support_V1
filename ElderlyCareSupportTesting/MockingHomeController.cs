@@ -1,19 +1,13 @@
 using System.Net;
-using Azure.Identity;
 using ElderlyCareSupport.Application.Common;
-using ElderlyCareSupport.Application.Contracts;
-using ElderlyCareSupport.Application.Contracts.Common;
-using ElderlyCareSupport.Application.Contracts.Login;
+using ElderlyCareSupport.Application.Contracts.Response;
 using ElderlyCareSupport.Application.DTOs;
 using ElderlyCareSupport.Application.Enums;
 using ElderlyCareSupport.Application.IService;
-using ElderlyCareSupport.Domain.Models;
-using FluentValidation;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using LoginRequest = ElderlyCareSupport.Application.Contracts.Login.LoginRequest;
+using LoginRequest = ElderlyCareSupport.Application.Contracts.Requests.LoginRequest;
 
 namespace ElderlyCareSupportTesting;
 
@@ -21,44 +15,23 @@ using ElderlyCareSupport.Server.Controllers;
 
 public class MockHomeController
 {
-    private readonly ElderlyCareSupportAccountController _mockController;
+    private readonly ElderlyCareSupportHomeController _mockController;
     private readonly Mock<IFeeService> _mockFeeService;
-    private readonly Mock<ILogger<ElderlyCareSupportAccountController>> _mockLogger;
-    private readonly Mock<ILoginService> _mockLoginService;
-    private readonly Mock<IRegistrationService> _mockRegistrationService;
-    private readonly Mock<IForgotPaswordService> _mockForgotPasswordService;
-    private readonly Mock<IApiResponseFactoryService> _mockApiResponseFactoryService;
-    private readonly Mock<IModelValidatorService> _mockModelValidatorService;
-    private readonly Mock<IValidator<RegistrationRequest>> _validator;
-    private readonly Mock<IValidator<LoginRequest>> _loginValidator;
-    private readonly Mock<IValidator<string>> _emailValidator;
-    
+    private readonly Mock<IApiResponseFactoryService> _mockApiResponseFactory;
+    private readonly Mock<ILogger<ElderlyCareSupportHomeController>> _logger;
+
 
     public MockHomeController()
     {
         _mockFeeService = new Mock<IFeeService>();
-        _mockLogger = new Mock<ILogger<ElderlyCareSupportAccountController>>();
-        _mockLoginService = new Mock<ILoginService>();
-        _mockRegistrationService = new Mock<IRegistrationService>();
-        _mockForgotPasswordService = new Mock<IForgotPaswordService>();
-        _mockApiResponseFactoryService = new Mock<IApiResponseFactoryService>();
-        _mockModelValidatorService = new Mock<IModelValidatorService>();
-        _validator = new Mock<IValidator<RegistrationRequest>>();
-        _loginValidator = new Mock<IValidator<LoginRequest>>();
-        _emailValidator = new Mock<IValidator<string>>();
+        _logger = new Mock<ILogger<ElderlyCareSupportHomeController>>();
+        _mockApiResponseFactory = new Mock<IApiResponseFactoryService>();
         
-        _mockController = new ElderlyCareSupportAccountController(
-            _mockFeeService.Object,
-            _mockLogger.Object,
-            _mockLoginService.Object,
-            _mockRegistrationService.Object,
-            _mockForgotPasswordService.Object,
-            _mockApiResponseFactoryService.Object,
-            _mockModelValidatorService.Object,
-            _validator.Object,
-            _loginValidator.Object,
-            _emailValidator.Object
-        );
+        _mockController = new ElderlyCareSupportHomeController(
+           _mockFeeService.Object,
+           _logger.Object,
+           _mockApiResponseFactory.Object
+           );
     }
 
     [Fact]
@@ -127,10 +100,10 @@ public class MockHomeController
             
         };
         _mockFeeService.Setup(service => service.GetAllFeeDetails()).ReturnsAsync(feeDetails);
-        _mockApiResponseFactoryService.Setup(service => service.CreateResponse(
+        _mockApiResponseFactory.Setup(service => service.CreateResponse(
             It.IsAny<IEnumerable<FeeConfigurationDto>>(), 
             true, 
-            CommonConstants.StatusMessageOk, 
+            Constants.StatusMessageOk, 
             HttpStatusCode.OK, 
             It.IsAny<string>(),
             null)
@@ -138,7 +111,7 @@ public class MockHomeController
         {
             Success = true,
             Data = feeDetails,
-            StatusMessage = CommonConstants.StatusMessageOk
+            StatusMessage = Constants.StatusMessageOk
         });
         
         
